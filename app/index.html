@@ -1,21 +1,30 @@
-<!doctype html>
-<html lang="en" ng-app="myApp">
-<head>
-  <meta charset="utf-8">
-  <title>My AngularJS App</title>
-  <link rel="stylesheet" href="css/app.css"/>
-</head>
-<body>
-  <div>Angular seed app: v<span app-version></span></div>
+<!DOCTYPE html>
+<html ng-app="creditsTracking">
+    <head>
+        <title>Credits Tracking</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-  -->
-  <script src="lib/angular/angular.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/services.js"></script>
-  <script src="js/controllers.js"></script>
-  <script src="js/filters.js"></script>
-  <script src="js/directives.js"></script>
-</body>
+        <link type="text/css" rel="stylesheet" href="http://cdn.jsdelivr.net/bootstrap/3.0.0rc1/css/bootstrap.min.css">
+        <link type="text/css" rel="stylesheet" href="http://cdn.jsdelivr.net/fontawesome/3.2.1/css/font-awesome.min.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/global.css" />
+
+        <script type="text/javascript" src="http://cdn.jsdelivr.net/angularjs/1.0.7/angular.min.js"></script> 
+        <script type="text/javascript" src='https://cdn.firebase.com/v0/firebase.js'></script>
+        <script type="text/javascript" src="assets/js/lib/angularFire.js"></script>
+        <script type="text/javascript" src="http://cdn.jsdelivr.net/underscorejs/1.5.1/underscore-min.js"></script>
+        <script type="text/javascript" src="http://cdn.jsdelivr.net/jquery/2.0.3/jquery-2.0.3.min.js"></script> 
+        <script type="text/javascript" src="http://cdn.jsdelivr.net/bootstrap/3.0.0rc1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script> 
+    </head>
+    <body>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-include="'nav.html'"></nav>
+                <section ng-view></section>
+                <footer></footer>
+            </div>
+        </div>
+    </body>
 </html>
