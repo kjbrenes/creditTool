@@ -11,7 +11,12 @@
         <li class="next"><a href="#">Next &rarr;</a></li>
     </ul>
     <!-- List group -->
+    <div class="input-group">
+        <span class="input-group-addon"><i class="icon-search"></i></span>
+        <input type="text" class="form-control" placeholder="Searh Criteria..." ng-model="searchWorkshop">
+    </div>
+    <br/>
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="workshop in workshops"><input type="checkbox" value"{{workshop.id}}">Name: {{workshop.name}} - Category: {{workshop.category}} - Credits: {{workshop.credits}}</li>
+        <li class="list-group-item" ng-repeat="workshop in tempWorkshops | filter:searchWorkshop "><input type="hidden" value"{{workshop.id}}"/> <strong>Name:</strong> {{workshop.name}} <strong>Category:</strong> {{workshop.category}} <strong>Credits:</strong> {{workshop.credits}} <button type="button" class="btn btn-default">Send to check</button></li>
     </ul>
 </div>

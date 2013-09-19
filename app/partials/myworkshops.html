@@ -12,13 +12,6 @@
     </ul>
     <!-- List group -->
     <ul class="list-group">
-        <li class="list-group-item">Cras justo odio <i class="icon-ok-sign"></i></li>
-        <li class="list-group-item">Dapibus ac facilisis in <i class="icon-ok-sign"></i></li>
-        <li class="list-group-item">Cras justo odio <i class="icon-exclamation-sign"></i></li>
-        <li class="list-group-item">Cras justo odio <i class="icon-exclamation-sign"></i></li>
-        <li class="list-group-item">Morbi leo risus <i class="icon-ok-sign"></i></li>
-        <li class="list-group-item">Porta ac consectetur ac <i class="icon-ok-sign"></i></li>
-        <li class="list-group-item">Vestibulum at eros <i class="icon-ok-sign"></i></li>
-        <li class="list-group-item">Cras justo odio <i class="icon-exclamation-sign"></i></li>
+        <li class="list-group-item" ng-repeat="myworkshop in myworkshops">{{myworkshop.workshops}} <i class="icon-ok-sign"></i></li>
     </ul>
 </div>

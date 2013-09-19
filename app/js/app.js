@@ -18,13 +18,41 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
 }]);
 
 creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'angularFireCollection', 'fbWorkshops', 'fbMyWorkshops', 'fbAddWorkshops', function ($scope, angularFireCollection, fbWorkshops, fbMyWorkshops, fbAddWorkshops) {
-	$scope.workshops = angularFireCollection(fbWorkshops);
+	/*$scope.workshops = angularFireCollection(fbWorkshops);
 	$scope.myworkshops = angularFireCollection(fbMyWorkshops);
-	$scope.addworkshops = angularFireCollection(fbAddWorkshops);
+	$scope.addworkshops = angularFireCollection(fbAddWorkshops);*/
+	$scope.workshops = new Firebase(fbWorkshops);
+	$scope.myworkshops = new Firebase(fbMyWorkshops);
+	$scope.addworkshops = new Firebase(fbAddWorkshops);
+
 }]);
 
 creditsTracking.controller('WorkshopsCtrl', ['$scope', function ($scope) {
-	
+	var workshops = $scope.workshops, myworkshops = $scope.myworkshops, tempWorkshops = [], tempMyWorkshops = [];
+	workshops.on('child_added', function(snapshot) {
+		var msgData = snapshot.val();
+		tempWorkshops.push({
+			name: msgData.name, 
+			category: msgData.category, 
+			credits: msgData.credits, 
+			author: ''
+		});
+	});
+
+	myworkshops.on('child_added', function(snapshot) {
+		var msgData = snapshot.val();
+
+		alert(msgData.name);
+		/*tempMyWorkshops.push({
+			name: msgData.name, 
+			category: msgData.category, 
+			credits: msgData.credits, 
+			author: ''
+		});*/
+	});
+
+	$scope.tempWorkshops = tempWorkshops;
+
 }]);
 
 creditsTracking.controller('MyWorkshopsCtrl', ['$scope', function ($scope) {
