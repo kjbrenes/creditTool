@@ -17,20 +17,21 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
         .otherwise({templateUrl: 'partials/home.html'});
 }]);
 
-/*creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'angularFireCollection', 'fbURL', function ($scope, angularFireCollection, fbURL) {
-	$scope.creditsTrackingData = angularFireCollection(fbURL);
-}]);*/
-
-creditsTracking.controller('WorkshopsCtrl', ['$scope', 'angularFireCollection', 'fbWorkshops', function ($scope, angularFireCollection, fbWorkshops) {
+creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'angularFireCollection', 'fbWorkshops', 'fbMyWorkshops', 'fbAddWorkshops', function ($scope, angularFireCollection, fbWorkshops, fbMyWorkshops, fbAddWorkshops) {
 	$scope.workshops = angularFireCollection(fbWorkshops);
-}]);
-
-creditsTracking.controller('MyWorkshopsCtrl', ['$scope', 'angularFireCollection', 'fbMyWorkshops', function ($scope, angularFireCollection, fbMyWorkshops) {
 	$scope.myworkshops = angularFireCollection(fbMyWorkshops);
+	$scope.addworkshops = angularFireCollection(fbAddWorkshops);
+}]);
+
+creditsTracking.controller('WorkshopsCtrl', ['$scope', function ($scope) {
+	
+}]);
+
+creditsTracking.controller('MyWorkshopsCtrl', ['$scope', function ($scope) {
+	
 }]);
 
 
-
-creditsTracking.controller('AddWorkshopsCtrl', ['$scope', 'angularFireCollection', 'fbAddWorkshops', function ($scope, angularFireCollection, fbAddWorkshops) {
-	$scope.addworkshops = angularFireCollection(fbAddWorkshops);
+creditsTracking.controller('AddWorkshopsCtrl', ['$scope', function ($scope) {
+	
 }]);
