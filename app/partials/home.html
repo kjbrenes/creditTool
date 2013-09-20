@@ -1,10 +1,10 @@
-<div class="panel panel-default">
+<div class="panel panel-default" ng-controller="HomeCtrl">
     <!-- Default panel contents -->
     <div class="panel-heading page-header">
         <h1>Credits Tracking<small> on Yahoo! University</small></h1>    
     </div>
     <div class="panel-body">
-        <p>My Credits: 35 <a href="#" class="label label-default"><i class="icon-plus-sign-alt"></i> Click For More Credits</a></p>
+        <h3>My Credits: <span class="label label-success">{{myCredits}}</span></h3>
     </div>
     <div class="row">
         <div class="col-sm-6 col-md-3">
@@ -12,24 +12,17 @@
                 <div class="caption">
                     <h2>Latest Workshops&nbsp;<i class="icon-book"></i></h2>
                     <ul class="list-group">
-                        <li class="list-group-item">Cras justo odio <span class="label label-danger">New</span></li>
-                        <li class="list-group-item">Dapibus ac facilisis in <span class="label label-danger">New</span></li>
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true"><p>{{latest.creationdate}} - {{latest.name}} - {{latest.category}} - {{latest.credits}} <span class="label label-danger">New</span></p></li>
                     </ul>
                 </div>
             </div>
         </div>
-
         <div class="col-sm-6 col-md-3">
             <div class="thumbnail">
                 <div class="caption">
-                    <h2>Top Four <i class="icon-group"></i></h2>
+                    <h2>Top 10 <i class="icon-group"></i></h2>
                     <ul class="list-group">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span class="badge">{{$index+1}}</span>{{users.name}}</li>
                     </ul>
                 </div>
             </div>
