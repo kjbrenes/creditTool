@@ -1,0 +1,36 @@
+<div class="panel panel-default" ng-controller="AddWorkshopsCtrl">
+    <!-- Default panel contents -->
+    <div class="panel-heading page-header">
+        <h1>Workshops<small> on Yahoo! University</small></h1>    
+    </div>
+    <!-- List group -->
+        <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Add Workshop</h3>
+            </div>
+            <div class="panel-body">
+            <form ng-submit="addMessage()">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-search"></i></span>
+                    <input type="text" ng-model="searchText" placeholder="Search Author" class="form-control">
+                </div>
+                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption"><option ng-repeat="workshop in tempUsers | filter:searchText" value"" >{{workshop.name}}</option></select><br>
+                Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption"><option ng-repeat="workshop in tempWorkshops" value"{{workshop.category}}">{{workshop.category}}</option></select><br>
+                Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}"><br>
+                Url of Workshop:<input type="text" class="form-control" value=""><br>
+                Description:<textarea class="form-control" rows="8" cols="25" name="description" id="description"></textarea><br>
+                <!--
+                <label>
+                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                    mandatory
+                </label>&nbsp;
+                <label>
+                   <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                   optional
+                </label><br>
+                -->
+                <button type="submit" class="btn btn-primary btn-sm">Add</button>
+            </form>
+            </div>
+        </div>
+</div>
