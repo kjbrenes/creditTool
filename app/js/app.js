@@ -4,9 +4,9 @@
 /*global angular, Firebase*/
 var creditsTracking = angular.module('creditsTracking', ['firebase']);
 
-creditsTracking.value('fbWorkshops', 'https://credits-tracking.firebaseio.com/workshops');
-creditsTracking.value('fbMyWorkshops', 'https://credits-tracking.firebaseio.com/users');
-creditsTracking.value('fbAddWorkshops', 'hhttps://credits-tracking.firebaseio.com/categories');
+creditsTracking.value('fbWorkshops', 'https://mytracking.firebaseio.com/workshops');
+creditsTracking.value('fbMyWorkshops', 'https://mytracking.firebaseio.com/users');
+creditsTracking.value('fbAddWorkshops', 'https://mytracking.firebaseio.com/categories');
 
 creditsTracking.value('user', 'user001');
 
@@ -24,7 +24,7 @@ creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbWorkshops', 'fbM
 	$scope.workshops = new Firebase(fbWorkshops);
 	$scope.myworkshops = new Firebase(fbMyWorkshops);
 	$scope.addworkshops = new Firebase(fbAddWorkshops);
-	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
+	$scope.saveWorkshop = angularFireCollection(new Firebase('https://mytracking.firebaseio.com/workshops'));
 
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -136,6 +136,7 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', function ($scope) {
 	var loadUsers = $scope.myworkshops, loadWorkshops = $scope.addworkshops, tempUsers = [], tempWorkshops = [];
 	loadUsers.on('child_added', function(snapshot) {
 		var wsData = snapshot.val();
+		console.log(wsData);
 			tempUsers.push({
 				name: wsData.name + " " + wsData.firstname + " " + wsData.lastname
 			});
@@ -161,8 +162,9 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', function ($scope) {
 	};
 
 	$scope.addMessage = function() {
-		var currentDate = new Date();
-		$scope.saveWorkshop.add({author: $scope.myAuthorOption, category: $scope.myOption, creationdate: '12/02/2013', credits: $scope.credits, description: 'test', id: 'w0003', name: 'Test'});
+		//var currentDate = new Date();
+		//console.log($scope.user);
+		$scope.saveWorkshop.add({author: $scope.myAuthorOption, category: $scope.myOption, creationdate: '12/02/2013', credits: $scope.credits, description: $scope.work.description, id: 'w00020', name: $scope.user.name});
     }
 
 }]);
