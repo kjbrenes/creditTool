@@ -4,9 +4,7 @@
 /*global angular, Firebase*/
 var creditsTracking = angular.module('creditsTracking', ['firebase']);
 
-creditsTracking.value('fbWorkshops', 'https://credits-tracking.firebaseio.com/workshops');
-creditsTracking.value('fbMyWorkshops', 'https://credits-tracking.firebaseio.com/users');
-creditsTracking.value('fbAddWorkshops', 'https://mytracking.firebaseio.com/categories');
+creditsTracking.value('fbReference', 'https://credits-tracking.firebaseio.com/');
 
 creditsTracking.value('user', 'user002');
 
@@ -19,16 +17,14 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbWorkshops', 'fbMyWorkshops', 'fbAddWorkshops', function ($scope, fbWorkshops, fbMyWorkshops, fbAddWorkshops) {
-	$scope.workshops = new Firebase(fbWorkshops);
-	$scope.myworkshops = new Firebase(fbMyWorkshops);
-	$scope.addworkshops = new Firebase(fbAddWorkshops);
-
+creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', function ($scope, fbReference) {
+	$scope.fbData = new Firebase(fbReference);
+	window.fbData = $scope.fbData;
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', 'user', function ($scope, user) {
-	var workshops = $scope.workshops, users = $scope.myworkshops, latestWorkshops = [], tempUsers = [], currentUser = users.child(user);
+	var workshops = $scope.fbData.child('workshops'), users = $scope.fbData.child('users'), latestWorkshops = [], tempUsers = [], currentUser = users.child(user);
 	
 	currentUser.on('value', function(snapshot) {
 		$scope.myCredits = snapshot.val().credits;
@@ -57,7 +53,7 @@ creditsTracking.controller('HomeCtrl', ['$scope', 'user', function ($scope, user
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsCtrl', ['$scope', 'user', function ($scope, user) {
-	var workshops = $scope.workshops, myworkshops = $scope.myworkshops, tempWorkshops = [], currentUser = myworkshops.child( user + '/workshops');
+	var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( user + '/workshops'), tempWorkshops = [];
 	
 	workshops.on('child_added', function(snapshot) {
 		var wsData = snapshot.val();
@@ -78,7 +74,7 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', 'user', function ($scope,
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('MyWorkshopsCtrl', ['$scope', 'user', function ($scope, user) {
-	var myworkshops = $scope.myworkshops, workshops = $scope.workshops, currentUser = myworkshops.child( user + '/workshops'), tempMyWorkshops = [];
+	var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( user + '/workshops'), tempMyWorkshops = [];
 	
 	currentUser.on('child_added', function(snapshot) {
 		var myWsData = snapshot.val();
