@@ -12,11 +12,14 @@
             <form ng-submit="addMessage()">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-search"></i></span>
-                    <input type="text" ng-model="searchText" placeholder="Search Author" class="form-control">
+                    <input type="text" ng-model="searchUser" placeholder="Search Author" class="form-control">
                 </div>
-                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption"><option ng-repeat="workshop in tempUsers | filter:searchText" value"" >{{workshop.name}}</option></select><br>
+                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption" ng-options="a.name for a in tempUsers | filter:searchUser">
+               	</select>
+                <br>
                 Name:<input type="text" class="form-control" ng-model="user.name" value=""><br>
-                Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption"><option ng-repeat="workshop in tempWorkshops" value"{{workshop.category}}">{{workshop.category}}</option></select><br>
+                
+                Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption" ng-options="w.category for w in tempWorkshops"></select><br>
                 Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}"><br>
                 Url of Workshop:<input type="text" class="form-control" value=""><br>
                 Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description"></textarea><br>

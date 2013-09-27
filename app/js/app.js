@@ -110,37 +110,55 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', 'user', function ($scop
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', function ($scope) {
-	var pendingworkshops = $scope.myworkshops, workshops = $scope.workshops, tempPendingWorkshops = [];
+	var pendingworkshops = $scope.fbData.child('users'), workshops = $scope.fbData.child('workshops'), tempPendingWorkshops = [];
 
 	pendingworkshops.on('child_added', function(snapshot) {
 		var wsData = snapshot.val();
 	  	var allUsers = pendingworkshops.child( snapshot.name() + '/workshops');
+		//console.log(snapshot.name());
+	  	var mainUser = snapshot.name();
 	  	allUsers.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
+					var workshopname = snapshot.name();
+					//console.log(workshopname);
 					if ((myWsData.id == wsDataWorkshop.id) && (myWsData.status == "pending") && (!_.isUndefined(myWsData.id))) {
 						tempPendingWorkshops.push({
 							id: wsDataWorkshop.id,
 							status: myWsData.status,
 							name: wsData.username, 
-							category: wsDataWorkshop.category
+							category: wsDataWorkshop.category,
+							user: mainUser,
+							workshopnode: workshopname
 						});
 					}
 				});
 		});
+		
 	});
-	$scope.tempPendingWorkshops = tempPendingWorkshops;
 
-	$scope.changeState = function() {		
-		alert("id");
-    }
+	$scope.changeState = function(user, workshopId, workshopName) {
+		//console.log(user + '-' + workshopId + '-' + workshopName);
+		var workShoptoApprobe = pendingworkshops.child( user + '/workshops');
+		var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopName);
+		workShoptoApprobe.on('child_added', function(snapshot) {
+			var readWsData = snapshot.val();
+			//console.log(readWsData);
+			if ((readWsData.id == workshopId)) {
+				selectedWorkshop.update({status: 'approbed'});
+			}
+
+		});
+	}
+	
+	$scope.tempPendingWorkshops = tempPendingWorkshops;
 
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('AddWorkshopsCtrl', ['$scope', function ($scope) {
-	var loadUsers = $scope.myworkshops, loadWorkshops = $scope.addworkshops, tempUsers = [], tempWorkshops = [];
+	var loadUsers = $scope.fbData.child('users'), loadWorkshops = $scope.fbData.child('categories'), tempUsers = [], tempWorkshops = [];
 	loadUsers.on('child_added', function(snapshot) {
 		var wsData = snapshot.val();
 			tempUsers.push({
@@ -159,18 +177,13 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', function ($scope) {
 	$scope.tempWorkshops = tempWorkshops;
 
 	$scope.selectedCategory = function() {
-    	loadWorkshops.on('child_added', function(snapshot) {
-		var myWsDataAll = snapshot.val();
-	    	if (($scope.myOption == myWsDataAll.name)  ) {
-				$scope.credits = myWsDataAll.credits;
-			}
-		});
+		$scope.credits = $scope.myOption.credits;
 	};
 
 	$scope.addMessage = function() {
 		//var currentDate = new Date();
-		//console.log($scope.user);
-		$scope.saveWorkshop.add({author: $scope.myAuthorOption, category: $scope.myOption, creationdate: '12/02/2013', credits: $scope.credits, description: $scope.work.description, id: 'w00020', name: $scope.user.name});
+		//console.log($scope.user.name);
+		$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: '12/02/2013', credits: $scope.credits, description: $scope.work.description, id: Math.floor(Math.random()*101), name: $scope.user.name});
     }
 
 }]);

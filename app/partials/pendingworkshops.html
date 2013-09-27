@@ -16,14 +16,14 @@
         <input type="text" class="form-control" placeholder="Search Criteria..." ng-model="searchMyWorkshop">
     </div>
     <br/>
-    <form ng-submit="changeState()">
+    <form>
          <ul class="list-group">
             <li class="list-group-item" ng-repeat="myworkshop in tempPendingWorkshops  | filter:searchMyWorkshop ">
-                <input type="hidden" value"{{myworkshop.category}}"/>{{myworkshop.id}}
+            	<input type="text" class="form-control" ng-model="user.name" value="" >
                 <strong>Username:</strong> {{myworkshop.name}} {{myworkshop.firstname}}
                 <strong>Category:</strong> {{myworkshop.category}}
                 <strong>Status:</strong> <span class="label label-danger">{{myworkshop.status}}</span>
-                <button class="btn btn-default">Approbe this Workshop</button>
+<button type="submit" class="btn btn-default" value="{{myworkshop.id}}" ng-click="changeState('{{myworkshop.user}}', '{{myworkshop.id}}', '{{myworkshop.workshopnode}}')">Approbe this Workshop</button>
             </li>
         </ul>
     </form>
