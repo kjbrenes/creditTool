@@ -121,14 +121,17 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', function ($scope) 
 				var myWsData = snapshot.val();
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
+					//console.log(wsDataWorkshop);
 					var workshopname = snapshot.name();
 					//console.log(workshopname);
 					if ((myWsData.id == wsDataWorkshop.id) && (myWsData.status == "pending") && (!_.isUndefined(myWsData.id))) {
 						tempPendingWorkshops.push({
 							id: wsDataWorkshop.id,
 							status: myWsData.status,
-							name: wsData.username, 
+							name: wsData.username,
+							userCredits: wsData.credits,
 							category: wsDataWorkshop.category,
+							workshopCredits: wsDataWorkshop.credits,
 							user: mainUser,
 							workshopnode: workshopname
 						});
@@ -138,15 +141,18 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', function ($scope) 
 		
 	});
 
-	$scope.changeState = function(user, workshopId, workshopName) {
-		//console.log(user + '-' + workshopId + '-' + workshopName);
+	$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits) {
+		console.log(user + '-' + workshopId + '-' + workshopName + '-' + userCredits + '-' + workshopCredits);
+		var users = pendingworkshops.child(user);
 		var workShoptoApprobe = pendingworkshops.child( user + '/workshops');
 		var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopName);
 		workShoptoApprobe.on('child_added', function(snapshot) {
 			var readWsData = snapshot.val();
+			var totalCredits = parseInt(userCredits) + parseInt(workshopCredits);
 			//console.log(readWsData);
 			if ((readWsData.id == workshopId)) {
 				selectedWorkshop.update({status: 'approbed'});
+				users.update({credits: totalCredits});
 			}
 
 		});
