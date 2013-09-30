@@ -111,8 +111,7 @@ Panel
 }
 
 .label-danger {
-	float: right;
-	margin-left: 10px;
+	margin-left: 5px;
 	background: #94be01;	
 }
 
