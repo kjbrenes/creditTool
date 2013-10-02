@@ -3,10 +3,13 @@
   <a class="navbar-brand" href="#">Yahoo! University</a>
 </div>
 <!-- Collect the nav links, forms, and other content for toggling -->
-<ul class="nav navbar-nav">
-    <li class="active"><a class="icon-home" href="#/page/home"> Home</a></li>
-    <li><a href="#/page/myworkshops">My Workshops</a></li>
-    <li><a href="#/page/workshops">Workshops</a></li>
-    <li><a href="#/page/addworkshops">Add Workshops</a></li>
-    <li><a href="#/page/pendingworkshops">Pending Workshops</a></li>
+<div>
+<ul class="nav navbar-nav" ng-controller="HomeCtrl" ng-switch="{{type}}">
+    <li class="active" ng-switch-when="2"><a class="icon-home" href="#/page/home"> Home</a></li>
+    <li ng-switch-when="2"><a href="#/page/myworkshops">My Workshops</a></li>
+    <li ng-switch-when="2"><a href="#/page/workshops">Workshops</a></li>
+    <li ng-switch-when="1"><a href="#/page/addworkshops">Add Workshops</a></li>
+    <li ng-switch-when="1"><a href="#/page/pendingworkshops">Pending Workshops</a></li>
+    <li ng-switch-when="1"><a href="#/page/changecredits">Change Credits</a></li>
+    <li ng-switch-default>{{type}}</li>
 </ul>

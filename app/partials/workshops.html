@@ -1,3 +1,4 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="CreditsTrackingCtrl" ng-include="'partials/nav.html'"></nav>
 <div class="panel panel-default" ng-controller="WorkshopsCtrl">
     <!-- Default panel contents -->
     <div class="panel-heading page-header">
@@ -17,13 +18,12 @@
     </div>
     <br/>
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="workshop in tempWorkshops | filter:searchWorkshop">
-            <input type="hidden" value"{{workshop.id}}"/>
+        <li class="list-group-item" id="wsend{{workshop.itemID}}"  ng-repeat="workshop in tempWorkshops | filter:searchWorkshop">
             <strong>Name:</strong> {{workshop.name}}
             <strong>Category:</strong> {{workshop.category}}
             <strong>Credits:</strong> {{workshop.credits}}
             <strong>By:</strong> {{workshop.author}}
-            <button type="button" class="btn btn-default">Send to check</button>
+            <button ng-controller="WorkshopsSendtoCheckCtrl" type="button" class="btn btn-default" ng-click="sendtocheck('{{workshop.globalUser}}', '{{workshop.workshopId}}', '{{workshop.itemID}}', {{workshop.mainWorkshopId}})">Send to check</button>
         </li>
     </ul>
 </div>
