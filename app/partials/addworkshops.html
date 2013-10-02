@@ -15,12 +15,12 @@
                 <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption" ng-options="a.name for a in tempUsers | filter:searchUser">
                	</select>
                 <br>
-                Name:<input type="text" class="form-control" ng-model="user.name" value=""><br>
+                Name:<input type="text" class="form-control" ng-model="user.name" value="" required><br>
                 
                 Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption" ng-options="w.category for w in tempWorkshops"></select><br>
-                Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}"><br>
-                Url of Workshop:<input type="text" class="form-control" value=""><br>
-                Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description"></textarea><br>
+                Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}" required><br>
+                Url of Workshop:<input type="text" class="form-control" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
+                Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description" required></textarea><br>
                 <!--
                 <label>
                     <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
