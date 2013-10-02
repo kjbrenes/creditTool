@@ -19,7 +19,7 @@
                 
                 Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption" ng-options="w.category for w in tempWorkshops"></select><br>
                 Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}" required><br>
-                Url of Workshop:<input type="text" class="form-control" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
+                Url of Workshop:<input type="text" class="form-control" value="" ng-model="work.url" placeholder="Please insert a link beginning with 'http://'" required><br>
                 Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description" required></textarea><br>
                 <!--
                 <label>
