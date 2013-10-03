@@ -2,6 +2,8 @@
 /*-------------------------
 Global
 -------------------------*/
+body { padding-top: 70px; }
+
 p {
 	color: #666;
 }
@@ -54,6 +56,14 @@ Heading
 .panel-heading h1 small {
 	color: #fff;
 }
+
+.logoutBtn {
+	float: right;
+	margin-top: 16px;
+	cursor: pointer;
+	font-size: 85%;
+}
+
 /*-------------------------
 End Heading
 -------------------------*/
@@ -83,7 +93,9 @@ Nav Heading
 }
 
 .navbar-inverse .navbar-nav > li > a,
-.navbar-inverse .navbar-brand {
+.navbar-inverse .navbar-brand,
+.logoutBtn {
+	text-decoration: none;
 	color: #fff;
 }
 
@@ -91,7 +103,9 @@ Nav Heading
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus,
 .navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-brand:hover {
+.navbar-inverse .navbar-brand:hover,
+.logoutBtn:hover {
+	text-decoration: none;
 	background: none;
 	color: #4dd6fd;
 }
