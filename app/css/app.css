@@ -7,6 +7,11 @@ body { padding-top: 70px; }
 p {
 color: #666;
 }
+
+.panel-heading {
+	margin: 0;
+}
+
 /*-------------------------
 End Global
 -------------------------*/
