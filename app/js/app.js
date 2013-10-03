@@ -10,8 +10,6 @@ creditsTracking.value('fbAddWorkshops', 'https://credits-tracking.firebaseio.com
 creditsTracking.value('fbReference', 'https://credits-tracking.firebaseio.com/');
 /*---------------------------------------------------------------------------------------------------------------------*/
 
-//creditsTracking.value('user', 'user001');
-
 creditsTracking.value('creditsEquivalent', 3);
 
 creditsTracking.config(['$routeProvider', function ($routeProvider) {
@@ -80,9 +78,6 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
-	//alert("si");
-	//alert($rootScope.type);
-	//if($rootScope.type != undefined){
 		if((_.isUndefined($rootScope.type))){
 			window.location = "#/page/login";
 		} else {
@@ -98,7 +93,6 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope
 				if(wsData.credits == 0){
 					workshopType = false;
 				}
-				//console.log(workshopType);
 					latestWorkshops.push({
 						id: wsData.id,
 						type: workshopType,
@@ -109,7 +103,6 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope
 						creationdate: wsData.creationdate
 					});
 			});
-			//console.log($scope.id);
 			if((!_.isUndefined($scope.name))){
 				$scope.latestWorkshops = latestWorkshops;
 			}
@@ -131,25 +124,28 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 			window.location = "#/page/login";
 		} else {
 		var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( $rootScope.name + '/workshops/'), tempWorkshops = [];
-		//console.log($rootScope.type);
 		var mainUser = $rootScope.name;
 		var itemID = 0;
 		currentUser.on('child_added', function(snapshot) {
 			var myWsData = snapshot.val();
-			//console.log(snapshot.name());
 			var eachWorkshop = currentUser.child(snapshot.name());
 			itemID++;
 			workshops.on('child_added', function(snapshot) {
 				var wsData = snapshot.val();
+				//console.log(wsData.url);
 		  		var mainWorkshopId = snapshot.name();
-		  		//console.log(mainWorkshopId);
-		  		//console.log(wsData.id + "--" + myWsData.id);
+		  		var workshopType = true;
+				if(wsData.credits == 0){
+					workshopType = false;
+				}
 				if ((myWsData.id != wsData.id)  ) {
 					if((itemID == 1)){
 						tempWorkshops.push({
 							name: wsData.name, 
-							category: wsData.category, 
-							credits: wsData.credits, 
+							type: workshopType,
+							category: wsData.category,
+							credits: wsData.credits,
+							url: wsData.url,
 							author: wsData.author,
 							globalUser: mainUser,
 							workshopId: wsData.id,
@@ -168,7 +164,6 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
 	$scope.sendtocheck = function(userId, workshopId, itemID, mainWorkshopId) {
-		//console.log(userId + '-' + workshopId + '-' + mainWorkshopId);
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 			$scope.saveWorkshop.add({id: workshopId, status: 'pending'});
@@ -187,11 +182,9 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', function 
 		
 		currentUser.on('child_added', function(snapshot) {
 			var myWsData = snapshot.val();
-			//console.log(myWsData);
 			workshops.on('child_added', function(snapshot) {
 				var wsData = snapshot.val();
 				var workshopType = true;
-				//console.log(wsData.credits);
 				if(wsData.credits == 0){
 					workshopType = false;
 				}
@@ -215,24 +208,19 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', function 
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
-	//console.log($rootScope.type);
-
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
 		var pendingworkshops = $scope.fbData.child('users'), workshops = $scope.fbData.child('workshops'), tempPendingWorkshops = [];
 		var itemID = 0;
 		pendingworkshops.on('child_added', function(snapshot) {
 			var wsData = snapshot.val();
 		  	var allUsers = pendingworkshops.child( snapshot.name() + '/workshops');
-			//console.log(snapshot.name());
 		  	var mainUser = snapshot.name();
 		  	allUsers.on('child_added', function(snapshot) {
 		  		itemID++;	
 				var myWsData = snapshot.val();
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
-					//console.log(wsDataWorkshop);
 					var workshopname = snapshot.name();
-					//console.log(myWsData.id + "--" + wsDataWorkshop.id);
 					if ((myWsData.id == wsDataWorkshop.id) && (myWsData.status == "pending") && (!_.isUndefined(myWsData.id))) {
 						tempPendingWorkshops.push({
 							id: wsDataWorkshop.id,
@@ -253,19 +241,14 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 		});
 
 		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits, itemID) {
-			//console.log(user + '-' + workshopId + '-' + workshopName + '-' + userCredits + '-' + workshopCredits);
-			//console.log(workshopId);
 			var users = pendingworkshops.child(user);
 			var workShoptoApprobe = pendingworkshops.child( user + '/workshops');
-			//console.log(workShoptoApprobe);
 			workShoptoApprobe.on('child_added', function(snapshot) {
 				var readWsData = snapshot.val();
 				var totalCredits = parseInt(userCredits) + parseInt(workshopCredits);
-				//console.log(readWsData.id + "--" + workshopId);
 				if ((readWsData.id == workshopId)) {
 					var workshopname = snapshot.name();
 					var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopname);
-					console.log(selectedWorkshop);
 					selectedWorkshop.update({status: 'approbed'});
 					users.update({credits: totalCredits});
 					alert("The workshop has been approved");
@@ -307,7 +290,6 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		$scope.workshopType = "mandatory";
 
 		$scope.selectedCategory = function() {
-			//console.log($scope.workshopType);
 			if($scope.workshopType == 'mandatory'){
 				$scope.credits = $scope.myOption.credits;
 			} else {
@@ -316,7 +298,6 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		};
 
 		$scope.addMessage = function() {
-			//console.log($scope.work.url);
 			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.credits, url: $scope.work.url, description: $scope.work.description, id: Math.floor(Math.random()*101), name: $scope.user.name});
 			alert("The workshop has been added");
 	    }
@@ -351,7 +332,6 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 				var readWsData = snapshot.val();
 				var firebaseUser = snapshot.name();
 				if ((selectedUser == firebaseUser)) {
-					//console.log($("#"+selectedUser));
 					users.update({credits: 0});
 					alert("The points has been changes");
 					$("#"+selectedUser).addClass("hidde");

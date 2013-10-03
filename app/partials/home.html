@@ -13,7 +13,9 @@
                 <div class="caption">
                     <h2>Latest Workshops&nbsp;<i class="icon-book"></i></h2>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true" ng-switch="{{latest.type}}"><p>{{latest.creationdate}} - {{latest.name}} - {{latest.category}} - <span ng-switch-when="true">{{latest.credits}} Credits -</span> <strong ng-switch-when="true">mandatory</strong><strong ng-switch-when="false">optional</strong> <a href="{{latest.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a>  <span class="label label-danger">New</span></p></li>
+                        <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true">
+                            <p>{{latest.creationdate}} - <strong>{{latest.name}}</strong> - <span>{{latest.credits}} Credits </span><a href="{{latest.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a>  <span class="label label-danger">New</span></p>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -23,7 +25,7 @@
                 <div class="caption">
                     <h2>Top 10 <i class="icon-group"></i></h2>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span class="badge">{{$index+1}}</span>{{users.name}}</li>
+                        <li class="list-group-item" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span>{{$index+1}}</span> {{users.name}}</li>
                     </ul>
                 </div>
             </div>
