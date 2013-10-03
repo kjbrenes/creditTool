@@ -15,11 +15,11 @@
     </div>
     <br/>
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="myworkshop in tempMyWorkshops  | filter:searchMyWorkshop ">
+        <li class="list-group-item" ng-repeat="myworkshop in tempMyWorkshops  | filter:searchMyWorkshop" ng-switch="{{myworkshop.type}}">
             <input type="hidden" value"{{myworkshop.id}}"/>
             <strong>Name:</strong> {{myworkshop.name}}
             <strong>Category:</strong> {{myworkshop.category}}
-            <strong>Credits:</strong> {{myworkshop.credits}}
+            <span ng-switch-when="true"><strong>Credits:</strong> {{myworkshop.credits}}</span>
             <strong>By:</strong> {{myworkshop.author}}
             <strong>Status:</strong> <span class="label label-danger">{{myworkshop.status}}</span>
         </li>
