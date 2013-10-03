@@ -1,19 +1,31 @@
-<!-- Brand and toggle get grouped for better mobile display -->
-<div class="navbar-header">
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
     <a class="navbar-brand" href="#/page/home">Yahoo! University</a>
-    <a ng-controller="LoginCtrl" ng-click="loginUser(0)" class="logoutBtn">Logout</a>
-</div>
-<!-- Collect the nav links, forms, and other content for toggling -->
-<div>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav" ng-controller="HomeCtrl" ng-switch="{{type}}">
-        <li class="active" ng-switch-when="2"><a class="icon-home" href="#/page/home"> Home</a></li>
-        <li ng-switch-when="2"><a href="#/page/myworkshops">My Workshops</a></li>
-        <li ng-switch-when="2"><a href="#/page/workshops">Workshops</a></li>
-        <li class="active" ng-switch-when="1"><a class="icon-home" href="#/page/home"> Home</a></li>
-        <li ng-switch-when="1"><a href="#/page/myworkshops">My Workshops</a></li>
-        <li ng-switch-when="1"><a href="#/page/workshops">Workshops</a></li>
-        <li ng-switch-when="1"><a href="#/page/addworkshops">Add Workshops</a></li>
-        <li ng-switch-when="1"><a href="#/page/pendingworkshops">Pending Workshops</a></li>
-        <li ng-switch-when="1"><a href="#/page/changecredits">Change Credits</a></li>
-    </ul>
-</div>
+            <li class="active" ng-switch-when="2"><a class="icon-home" href="#/page/home"> Home</a></li>
+            <li ng-switch-when="2"><a href="#/page/myworkshops">My Workshops</a></li>
+            <li ng-switch-when="2"><a href="#/page/workshops">Workshops</a></li>
+            <li class="active" ng-switch-when="1"><a class="icon-home" href="#/page/home"> Home</a></li>
+            <li ng-switch-when="1"><a href="#/page/myworkshops">My Workshops</a></li>
+            <li ng-switch-when="1"><a href="#/page/workshops">Workshops</a></li>
+            <li ng-switch-when="1"><a href="#/page/addworkshops">Add Workshops</a></li>
+            <li ng-switch-when="1"><a href="#/page/pendingworkshops">Pending Workshops</a></li>
+            <li ng-switch-when="1"><a href="#/page/changecredits">Change Credits</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a ng-controller="LoginCtrl" ng-click="loginUser(0)" class="logoutBtn">Logout</a></li>
+        </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
