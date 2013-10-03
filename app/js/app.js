@@ -8,7 +8,34 @@ creditsTracking.value('fbWorkshops', 'https://credits-tracking.firebaseio.com/wo
 creditsTracking.value('fbMyWorkshops', 'https://credits-tracking.firebaseio.com/users');
 creditsTracking.value('fbAddWorkshops', 'https://credits-tracking.firebaseio.com/categories');
 creditsTracking.value('fbReference', 'https://credits-tracking.firebaseio.com/');
+/*---------------------------------------------------------------------------------------------------------------------*/
 
+//creditsTracking.value('user', 'user001');
+
+creditsTracking.value('creditsEquivalent', 3);
+
+creditsTracking.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider
+        .when('/page/workshops', {templateUrl: 'partials/workshops.html'})
+        .when('/page/myworkshops', {templateUrl: 'partials/myworkshops.html'})
+        .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
+        .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
+        .when('/page/pendingworkshops', {templateUrl: 'partials/pendingworkshops.html'})
+        .when('/page/changecredits', {templateUrl: 'partials/changecredits.html'})
+        .when('/page/home', {templateUrl: 'partials/home.html'})
+        .when('/page/login', {templateUrl: 'partials/login.html'})
+        .otherwise({templateUrl: 'partials/login.html'});
+}]);
+creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference','fbWorkshops', 'fbMyWorkshops', 'fbAddWorkshops', 'angularFireCollection', '$rootScope', function ($scope, fbReference, fbWorkshops, fbMyWorkshops, fbAddWorkshops, angularFireCollection, $rootScope) {
+	$scope.fbData = new Firebase(fbReference);
+	window.fbData = $scope.fbData;
+
+	$scope.workshops = new Firebase(fbWorkshops);
+	$scope.myworkshops = new Firebase(fbMyWorkshops);
+	$scope.addworkshops = new Firebase(fbAddWorkshops);
+	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootScope) {
 	$scope.typeUser = 1;
@@ -56,34 +83,6 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 });
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
-
-//creditsTracking.value('user', 'user001');
-
-creditsTracking.value('creditsEquivalent', 3);
-
-creditsTracking.config(['$routeProvider', function ($routeProvider) {
-    $routeProvider
-        .when('/page/workshops', {templateUrl: 'partials/workshops.html'})
-        .when('/page/myworkshops', {templateUrl: 'partials/myworkshops.html'})
-        .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
-        .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
-        .when('/page/pendingworkshops', {templateUrl: 'partials/pendingworkshops.html'})
-        .when('/page/changecredits', {templateUrl: 'partials/changecredits.html'})
-        .when('/page/home', {templateUrl: 'partials/home.html'})
-        .when('/page/login', {templateUrl: 'partials/login.html'})
-        .otherwise({templateUrl: 'partials/login.html'});
-}]);
-creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference','fbWorkshops', 'fbMyWorkshops', 'fbAddWorkshops', 'angularFireCollection', '$rootScope', function ($scope, fbReference, fbWorkshops, fbMyWorkshops, fbAddWorkshops, angularFireCollection, $rootScope) {
-	$scope.fbData = new Firebase(fbReference);
-	window.fbData = $scope.fbData;
-
-	$scope.workshops = new Firebase(fbWorkshops);
-	$scope.myworkshops = new Firebase(fbMyWorkshops);
-	$scope.addworkshops = new Firebase(fbAddWorkshops);
-	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
-}]);
-/*---------------------------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	//alert("si");
 	//alert($rootScope.type);
@@ -99,7 +98,8 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope
 			latestWorkshops.push({
 				name: wsData.name, 
 				category: wsData.category, 
-				credits: wsData.credits, 
+				credits: wsData.credits,
+				url: wsData.url,
 				creationdate: wsData.creationdate
 			});
 		});
@@ -280,8 +280,15 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		});
 		$scope.tempWorkshops = tempWorkshops;
 
+		$scope.workshopType = "mandatory";
+
 		$scope.selectedCategory = function() {
-			$scope.credits = $scope.myOption.credits;
+			//console.log($scope.workshopType);
+			if($scope.workshopType == 'mandatory'){
+				$scope.credits = $scope.myOption.credits;
+			} else {
+				$scope.credits = 0;
+			}
 		};
 
 		$scope.addMessage = function() {

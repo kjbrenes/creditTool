@@ -13,7 +13,7 @@
                 <div class="caption">
                     <h2>Latest Workshops&nbsp;<i class="icon-book"></i></h2>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true"><p>{{latest.creationdate}} - {{latest.name}} - {{latest.category}} - {{latest.credits}} <span class="label label-danger">New</span></p></li>
+                        <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true"><p>{{latest.creationdate}} - {{latest.name}} - {{latest.category}} - {{latest.credits}} Credits - <a href="{{latest.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a> <span class="label label-danger">New</span></p></li>
                     </ul>
                 </div>
             </div>
