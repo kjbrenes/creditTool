@@ -87,6 +87,7 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope
 	//alert("si");
 	//alert($rootScope.type);
 	//if($rootScope.type != undefined){
+	if($rootScope.type == 1){
 		var workshops = $scope.fbData.child('workshops'), users = $scope.fbData.child('users'), latestWorkshops = [], tempUsers = [], currentUser = users.child($rootScope.name);
 		
 		currentUser.on('value', function(snapshot) {
@@ -95,15 +96,25 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', function ($scope
 		
 		workshops.on('child_added', function(snapshot) {
 			var wsData = snapshot.val();
-			latestWorkshops.push({
-				name: wsData.name, 
-				category: wsData.category, 
-				credits: wsData.credits,
-				url: wsData.url,
-				creationdate: wsData.creationdate
-			});
+			var workshopType = true;
+			if(wsData.credits == 0){
+				workshopType = false;
+			}
+			console.log(workshopType);
+				latestWorkshops.push({
+					id: wsData.id,
+					type: workshopType,
+					name: wsData.name, 
+					category: wsData.category, 
+					credits: wsData.credits,
+					url: wsData.url,
+					creationdate: wsData.creationdate
+				});
 		});
-		$scope.latestWorkshops = latestWorkshops;
+		//console.log($scope.id);
+		if((!_.isUndefined($scope.name))){
+			$scope.latestWorkshops = latestWorkshops;
+		}
 		
 		users.on('child_added', function(snapshot) {
 			var userData = snapshot.val();
