@@ -18,9 +18,9 @@
         <li class="list-group-item" ng-repeat="myworkshop in tempMyWorkshops  | filter:searchMyWorkshop">
             <input type="hidden" value"{{myworkshop.id}}"/>
             <p><strong>{{myworkshop.name}}</strong> <span class="label label-danger">{{myworkshop.status}}</span></p> 
-            <p>Category: {{myworkshop.category}}</p> 
+            <p>Category: <span class="category-icon">{{myworkshop.category}}</span></p> 
             <p>Credits: {{myworkshop.credits}}</p>
-            <p>By:{{myworkshop.author}}</p>
+            <p class="autor">By: {{myworkshop.author}}</p>
             
         </li>
     </ul>

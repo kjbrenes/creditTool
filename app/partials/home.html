@@ -25,8 +25,26 @@
                 <div class="caption">
                     <h2>Top 10 <i class="icon-group"></i></h2>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span>{{$index+1}}</span> {{users.name}}</li>
+                        <li class="list-group-item top-ten-list" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span>{{$index+1}}</span> {{users.name}}</li>
                     </ul>
+
+
+                    <table class="table table-striped panel panel-default top-ten-table">
+                        <tbody>
+                            <tr ng-repeat="users in tempUsers | orderBy: 'credits':true">
+                                <td class="top-ten-item"><span>{{$index+1}}</span> {{users.name}}
+                                </td>
+                            </tr>
+                        </tbody>
+
+
+
+
+
+                    </table>
+
+
+
                 </div>
             </div>
         </div>        
