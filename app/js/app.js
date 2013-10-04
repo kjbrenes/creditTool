@@ -24,6 +24,7 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
 creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'angularFireCollection', '$rootScope', function ($scope, fbReference, angularFireCollection, $rootScope) {
 	$scope.fbData = new Firebase(fbReference);
 	window.fbData = $scope.fbData;
+
 	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -139,7 +140,6 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 							category: wsData.category,
 							credits: wsData.credits,
 							url: wsData.url,
-							presential: wsData.presential,
 							author: wsData.author,
 							globalUser: mainUser,
 							workshopId: wsData.id,
@@ -171,7 +171,6 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', function 
 	if((_.isUndefined($rootScope.type))){
 			window.location = "#/page/login";
 		} else {
-		var myworkshops = $scope.myworkshops, workshops = $scope.workshops, currentUser = myworkshops.child( $rootScope.name + '/workshops'), tempMyWorkshops = [];
 		var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( $rootScope.name + '/workshops'), tempMyWorkshops = [];
 		
 		currentUser.on('child_added', function(snapshot) {
