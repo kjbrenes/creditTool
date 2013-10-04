@@ -187,7 +187,8 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', function 
 						id: myWsData.id,
 						type: workshopType,
 						status: myWsData.status,
-						name: wsData.name, 
+						presential: myWsData.presential,
+						name: wsData.name,
 						category: wsData.category, 
 						credits: wsData.credits, 
 						author: wsData.author
