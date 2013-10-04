@@ -142,11 +142,6 @@ Panel
 background: #999;
 }
 
-.panel {
-border: none;
-box-shadow: none;
-}
-
 .login-form h2,
 .panel-body h3,
 .thumbnail .caption {
@@ -179,6 +174,37 @@ color: #999;
 
 .hidde{
 display: none;
+}
+
+.top-ten-table {
+border-collapse: separate;
+}
+
+.top-ten-table tbody > tr > td {
+border-top: none;
+}
+
+.top-ten-item span {
+display: inline-block;
+width: 28px;
+height: 28px;
+background: url("../img/top-ten-icon.png") no-repeat scroll right top rgba(0, 0, 0, 0);
+color: #FFFFFF;    
+font-weight: 800;    
+line-height: 1.9;
+text-align: center;    
+}
+
+.category-icon {
+    padding: 2px 5px;
+    border: 1px solid #94BE01;
+    -webkit-border-radius: 0.25em 0.25em 0.25em 0.25em;    
+    border-radius: 0.25em 0.25em 0.25em 0.25em;
+    color: #94BE01;
+}
+
+.autor {
+    color: #999;
 }
 
 /*-------------------------
