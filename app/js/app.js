@@ -4,9 +4,6 @@
 /*global angular, Firebase*/
 var creditsTracking = angular.module('creditsTracking', ['firebase', 'ngStorage']);
 
-creditsTracking.value('fbWorkshops', 'https://credits-tracking.firebaseio.com/workshops');
-creditsTracking.value('fbMyWorkshops', 'https://credits-tracking.firebaseio.com/users');
-creditsTracking.value('fbAddWorkshops', 'https://credits-tracking.firebaseio.com/categories');
 creditsTracking.value('fbReference', 'https://credits-tracking.firebaseio.com/');
 /*---------------------------------------------------------------------------------------------------------------------*/
 
@@ -24,13 +21,9 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
         .when('/page/login', {templateUrl: 'partials/login.html'})
         .otherwise({templateUrl: 'partials/login.html'});
 }]);
-creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference','fbWorkshops', 'fbMyWorkshops', 'fbAddWorkshops', 'angularFireCollection', '$rootScope', function ($scope, fbReference, fbWorkshops, fbMyWorkshops, fbAddWorkshops, angularFireCollection, $rootScope) {
+creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'angularFireCollection', '$rootScope', function ($scope, fbReference, angularFireCollection, $rootScope) {
 	$scope.fbData = new Firebase(fbReference);
 	window.fbData = $scope.fbData;
-
-	$scope.workshops = new Firebase(fbWorkshops);
-	$scope.myworkshops = new Firebase(fbMyWorkshops);
-	$scope.addworkshops = new Firebase(fbAddWorkshops);
 	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -146,6 +139,7 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 							category: wsData.category,
 							credits: wsData.credits,
 							url: wsData.url,
+							presential: wsData.presential,
 							author: wsData.author,
 							globalUser: mainUser,
 							workshopId: wsData.id,
@@ -298,7 +292,8 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		};
 
 		$scope.addMessage = function() {
-			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.credits, url: $scope.work.url, description: $scope.work.description, id: Math.floor(Math.random()*101), name: $scope.user.name});
+			//console.log($scope.isPresential);
+			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.credits, url: $scope.work.url, description: $scope.work.description, presential: $scope.isPresential, id: Math.floor(Math.random()*101), name: $scope.user.name});
 			alert("The workshop has been added");
 	    }
 	} else {

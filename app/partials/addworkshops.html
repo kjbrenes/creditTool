@@ -8,14 +8,6 @@
         <div class="panel panel-info">
             <div class="panel-body">
             <form ng-submit="addMessage()" name="myForm">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-search"></i></span>
-                    <input type="text" ng-model="searchUser" placeholder="Search Author" class="form-control">
-                </div>
-                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption" ng-options="a.name for a in tempUsers | filter:searchUser">
-                    <option style="display:none" value="">-- select a user --</option>
-               	</select>
-                <br>
                 *Name:<input type="text" class="form-control" ng-model="user.name" value="" required><br>
                 Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
                     <option style="display:none" value="">-- select a category --</option>
@@ -26,10 +18,20 @@
                    <input type="radio" name="optionsRadios" ng-model="workshopType" value="nomandatory" ng-click="selectedCategory()">
                    optional
                    <br>
+                <input type="checkbox" name="presential" ng-model="isPresential" value="presential" ng-true-value="presential" ng-false-value="no">
+                   presential
+                <br>
                 Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}" required><br>
                 *Url of Workshop:<input type="url" class="form-control" ng-model="work.url" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
                 Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description" required></textarea><br>
-                
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-search"></i></span>
+                    <input type="text" ng-model="searchUser" placeholder="Search Author" class="form-control">
+                </div>
+                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption" ng-options="a.name for a in tempUsers | filter:searchUser">
+                    <option style="display:none" value="">-- select a author --</option>
+               	</select>
+                <br>
                 <button type="submit" class="btn btn-primary btn-sm">Add</button>
             </form>
             </div>
