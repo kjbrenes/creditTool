@@ -126,21 +126,22 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 			itemID++;
 			workshops.on('child_added', function(snapshot) {
 				var wsData = snapshot.val();
-				//console.log(wsData.url);
+				//console.log(wsData);
 		  		var mainWorkshopId = snapshot.name();
-		  		var workshopType = true;
+		  		/*var workshopType = true;
 				if(wsData.credits == 0){
 					workshopType = false;
-				}
+				}*/
 				if ((myWsData.id != wsData.id)  ) {
 					if((itemID == 1)){
 						tempWorkshops.push({
 							name: wsData.name, 
-							type: workshopType,
+							type: wsData.type,
 							category: wsData.category,
 							credits: wsData.credits,
 							url: wsData.url,
 							author: wsData.author,
+							form: wsData.form,
 							globalUser: mainUser,
 							workshopId: wsData.id,
 							mainWorkshopId: mainWorkshopId,
@@ -160,7 +161,7 @@ creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCo
 	$scope.sendtocheck = function(userId, workshopId, itemID, mainWorkshopId) {
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
-			$scope.saveWorkshop.add({id: workshopId, status: 'pending'});
+			$scope.saveWorkshop.add({id: workshopId, status: 'registered'});
 			alert("The workshop has been sent");
 			$("#wsend"+itemID).addClass("hidde");
 		}
@@ -187,7 +188,6 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', function 
 						id: myWsData.id,
 						type: workshopType,
 						status: myWsData.status,
-						presential: myWsData.presential,
 						name: wsData.name,
 						category: wsData.category, 
 						credits: wsData.credits, 
@@ -215,7 +215,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
 					var workshopname = snapshot.name();
-					if ((myWsData.id == wsDataWorkshop.id) && (myWsData.status == "pending") && (!_.isUndefined(myWsData.id))) {
+					if ((myWsData.id == wsDataWorkshop.id) && (myWsData.status == "registered") && (!_.isUndefined(myWsData.id))) {
 						tempPendingWorkshops.push({
 							id: wsDataWorkshop.id,
 							status: myWsData.status,
@@ -282,18 +282,18 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		$scope.tempWorkshops = tempWorkshops;
 
 		$scope.workshopType = "mandatory";
+		$scope.workshopForm = "online";
 
-		$scope.selectedCategory = function() {
+		/*$scope.selectedType = function() {
 			if($scope.workshopType == 'mandatory'){
 				$scope.credits = $scope.myOption.credits;
 			} else {
 				$scope.credits = 0;
 			}
-		};
+		};*/
 
 		$scope.addMessage = function() {
-			//console.log($scope.isPresential);
-			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.credits, url: $scope.work.url, description: $scope.work.description, presential: $scope.isPresential, id: Math.floor(Math.random()*101), name: $scope.user.name});
+			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: Math.floor(Math.random()*101), name: $scope.user.name});
 			alert("The workshop has been added");
 	    }
 	} else {

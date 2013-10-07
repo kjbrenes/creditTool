@@ -9,19 +9,21 @@
             <div class="panel-body">
             <form ng-submit="addMessage()" name="myForm">
                 *Name:<input type="text" class="form-control" ng-model="user.name" value="" required><br>
-                Category:<select class="form-control" ng-change="selectedCategory()" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
-                    <option style="display:none" value="">-- select a category --</option>
+                Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
                 </select><br>
-                    <input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory" ng-click="selectedCategory()">
+                    <input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory"> <!-- ng-click="selectedType()" -->
                     mandatory
                 &nbsp;
-                   <input type="radio" name="optionsRadios" ng-model="workshopType" value="nomandatory" ng-click="selectedCategory()">
-                   optional
-                   <br>
-                <input type="checkbox" name="presential" ng-model="isPresential" value="presential" ng-true-value="presential" ng-false-value="no">
-                   presential
+               <input type="radio" name="optionsRadios" ng-model="workshopType" value="optional"> <!-- ng-click="selectedType()" -->
+                    optional
+               <br>
+                Value of Credits:<input type="text" class="form-control" ng-model="work.credits" value="" required><br>
+                <input type="radio" name="type" ng-model="workshopForm" value="online" >
+                   online
+                &nbsp;
+                <input type="radio" name="type" ng-model="workshopForm" value="presential">
+                    presential
                 <br>
-                Value of Credits:<input type="text" readonly="readonly" class="form-control" value="{{credits}}" required><br>
                 *Url of Workshop:<input type="url" class="form-control" ng-model="work.url" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
                 Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description" required></textarea><br>
                 <div class="input-group">

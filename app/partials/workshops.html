@@ -8,19 +8,28 @@
         <li class="previous disabled"><a href="#">&larr; Previous</a></li>
         <li class="next"><a href="#">Next &rarr;</a></li>
     </ul>
-    <!-- List group -->
-    <div class="input-group">
-        <span class="input-group-addon"><i class="icon-search"></i></span>
-        <input type="text" class="form-control" placeholder="Search Criteria..." ng-model="searchWorkshop">
-    </div>
     <br/>
+    Filter by: <p>Presential:<input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="presential" ng-false-value="" />
+    Online:<input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="online" ng-false-value="" /></p>
+    <!--Category:<select data-ng-model="searchWorkshop.category">
+            <option value="">Show All</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="Javascript Native">Javascript Native</option>
+            <option value="JavaScript Framework">JavaScript Framework</option>
+    </select>
+    -->
+    Category:<select class="form-control" ng-controller="AddWorkshopsCtrl" data-ng-model="searchWorkshop.category" ng-options="w.category for w in tempWorkshops">
+        <option value="">Show All</option>
+    </select><br>
     <ul class="list-group" ng-controller="WorkshopsSendtoCheckCtrl">
         <li class="list-group-item" id="wsend{{workshop.itemID}}" ng-repeat="workshop in tempWorkshops | filter:searchWorkshop" ng-switch="{{workshop.type}}">
+
             <h2><strong>{{workshop.name}}</strong> <a href="{{workshop.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a></h2>
             <p>Category: {{workshop.category}}</p>
             <p ng-switch-when="true">Credits: {{workshop.credits}}</p>
-            <p>By: {{workshop.author}}  <button type="button" class="btn btn-default" ng-click="sendtocheck('{{workshop.globalUser}}', '{{workshop.workshopId}}', '{{workshop.itemID}}', '{{workshop.mainWorkshopId}}')">Register</button></p>
+            <p>By: {{workshop.author}}</p>
+            <p>{{workshop.type}} <button type="button" class="btn btn-default" ng-click="sendtocheck('{{workshop.globalUser}}', '{{workshop.workshopId}}', '{{workshop.itemID}}', '{{workshop.mainWorkshopId}}')">Register</button></p>
         </li>
     </ul>
-            
 </div>
