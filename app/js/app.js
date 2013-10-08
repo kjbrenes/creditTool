@@ -126,7 +126,7 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 			itemID++;
 			workshops.on('child_added', function(snapshot) {
 				var wsData = snapshot.val();
-				//console.log(wsData);
+				console.log(wsData);
 		  		var mainWorkshopId = snapshot.name();
 		  		/*var workshopType = true;
 				if(wsData.credits == 0){
