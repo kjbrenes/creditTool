@@ -20,7 +20,7 @@
                 <strong>Username:</strong> {{myworkshop.name}}
                 <strong>Credits:</strong> {{myworkshop.userCredits}}&nbsp;<strong>equivalent to:</strong> {{myworkshop.points}} <strong>points</strong>
                 <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-<button type="submit" class="btn btn-default" value="" ng-click="changeCredits('{{myworkshop.user}}')">Change Credits Now</button>
+<button type="submit" class="btn btn-default" value="" ng-click="changeCredits('{{myworkshop.user}}')">Change Credits</button>
             </li>
         </ul>
     </form>
