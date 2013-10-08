@@ -10,6 +10,7 @@
             <form ng-submit="addMessage()" name="myForm">
                 *Name:<input type="text" class="form-control" ng-model="user.name" value="" required><br>
                 Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
+                <option style="display:none" value="">-- select a category --</option>
                 </select><br>
                     <input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory"> <!-- ng-click="selectedType()" -->
                     mandatory

@@ -11,20 +11,12 @@
     <br/>
     Filter by: <p>Presential:<input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="presential" ng-false-value="" />
     Online:<input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="online" ng-false-value="" /></p>
-    <!--Category:<select data-ng-model="searchWorkshop.category">
-            <option value="">Show All</option>
-            <option value="HTML">HTML</option>
-            <option value="CSS">CSS</option>
-            <option value="Javascript Native">Javascript Native</option>
-            <option value="JavaScript Framework">JavaScript Framework</option>
-    </select>
-    -->
-    Category:<select class="form-control" ng-controller="AddWorkshopsCtrl" data-ng-model="searchWorkshop.category" ng-options="w.category for w in tempWorkshops">
-        <option value="">Show All</option>
+    Category:<select class="form-control" ng-controller="AddWorkshopsCtrl" data-ng-model="searchWorkshop.category">
+    <option value="">-- All Categories --</option>
+    <option ng-repeat="value in tempWorkshops" value="{{value.category}}">{{value.category}}</option>
     </select><br>
     <ul class="list-group" ng-controller="WorkshopsSendtoCheckCtrl">
         <li class="list-group-item" id="wsend{{workshop.itemID}}" ng-repeat="workshop in tempWorkshops | filter:searchWorkshop" ng-switch="{{workshop.type}}">
-
             <h2><strong>{{workshop.name}}</strong> <a href="{{workshop.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a></h2>
             <p>Category: {{workshop.category}}</p>
             <p ng-switch-when="true">Credits: {{workshop.credits}}</p>
