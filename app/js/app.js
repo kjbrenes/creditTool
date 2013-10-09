@@ -64,6 +64,10 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 					$rootScope.name = $scope.$storage.x;
 					$rootScope.type = $scope.$storage.y;
 					$scope.typeUser = $rootScope.type;
+
+					$cookieStore.put($rootScope.type,$scope.$storage.y);
+					$scope.userTypeCookie = $cookieStore.get($rootScope.type);
+
 					window.location = "#/page/home";
 				}
 			});
@@ -76,6 +80,7 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
 	//$cookieStore.remove($scope.tempAllWorkshops);
+	//alert($rootScope.type);
 			if(_.isUndefined($cookieStore.get($scope.tempUsers))){
 				var workshops = $scope.fbData.child('workshops'), users = $scope.fbData.child('users'), latestWorkshops = [], tempUsers = [], currentUser = users.child($rootScope.name);
 
