@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default" role="navigation">
+
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -10,7 +10,7 @@
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="navbar-collapse navbar-ex1-collapse">
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav" ng-controller="HomeCtrl" ng-switch="{{type}}">
         <li class="active" ng-switch-when="2"><a href="#/page/home"><i class="icon-home"></i> Home</a></li>
         <li ng-switch-when="2"><a href="#/page/myworkshops">My Workshops</a></li>
@@ -26,4 +26,4 @@
         <li><a ng-controller="LoginCtrl" ng-click="loginUser(0)" class="logoutBtn"><i class="icon-signout"></i> Logout</a></li>
     </ul>
   </div><!-- /.navbar-collapse -->
-</nav>
+
