@@ -12,10 +12,10 @@
                 Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
                 <option style="display:none" value="">-- select a category --</option>
                 </select><br>
-                    <input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory"> <!-- ng-click="selectedType()" -->
+                    <input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory">
                     mandatory
                 &nbsp;
-               <input type="radio" name="optionsRadios" ng-model="workshopType" value="optional"> <!-- ng-click="selectedType()" -->
+               <input type="radio" name="optionsRadios" ng-model="workshopType" value="optional">
                     optional
                <br>
                 Value of Credits:<input type="text" class="form-control" ng-model="work.credits" value="" required><br>
@@ -36,6 +36,7 @@
                	</select>
                 <br>
                 <button type="submit" class="btn btn-primary btn-sm">Add</button>
+                <button type="reset" class="button">Reset</button>
             </form>
             </div>
         </div>

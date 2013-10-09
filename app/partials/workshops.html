@@ -11,9 +11,9 @@
     <br/>
     Filter by: <p>Presential:<input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="presential" ng-false-value="" />
     Online:<input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="online" ng-false-value="" /></p>
-    Category:<select class="form-control" ng-controller="AddWorkshopsCtrl" data-ng-model="searchWorkshop.category">
+    Category:<select class="form-control" ng-controller="LoadCategoriesCtrl" data-ng-model="searchWorkshop.category">
     <option value="">-- All Categories --</option>
-    <option ng-repeat="value in tempWorkshops" value="{{value.category}}">{{value.category}}</option>
+    <option ng-repeat="value in tempCategories" value="{{value.category}}">{{value.category}}</option>
     </select><br>
     <ul class="list-group" ng-controller="WorkshopsSendtoCheckCtrl">
         <li class="list-group-item" id="wsend{{workshop.itemID}}" ng-repeat="workshop in tempWorkshops | filter:searchWorkshop" ng-switch="{{workshop.type}}">
