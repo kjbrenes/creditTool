@@ -1,5 +1,5 @@
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="CreditsTrackingCtrl" ng-include="'partials/nav.html'"></nav>
-<div class="panel panel-default" ng-controller="HomeCtrl">
+<nav class="navbar navbar-default" role="navigation" ng-controller="CreditsTrackingCtrl" ng-include="'partials/nav.html'"></nav>
+<div ng-controller="HomeCtrl">
     <!-- Default panel contents -->
     <div class="panel-heading page-header">
         <h1>Credits Tracking<small> on Yahoo! University</small></h1>    
@@ -8,45 +8,23 @@
         <h3>My Credits: <span class="label label-success">{{myCredits}}</span></h3>
     </div>
     <div class="row">
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h2>Latest Workshops&nbsp;<i class="icon-book"></i></h2>
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true">
-                            <p>{{latest.creationdate}} - <strong>{{latest.name}}</strong> - <span>{{latest.credits}} Credits </span><a href="{{latest.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a>  <span class="label label-danger">New</span></p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <div class="col-sm-6 col-md-3">            
+            <div class="caption">
+                <h2>Latest Workshops&nbsp;<i class="icon-book"></i></h2>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true">
+                        <p>{{latest.creationdate}} - <strong>{{latest.name}}</strong> - <span>{{latest.credits}} Credits </span><a href="{{latest.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a>  <span class="label label-danger">New</span></p>
+                    </li>
+                </ul>
+            </div>            
         </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h2>Top 10 <i class="icon-group"></i></h2>
-                    <ul class="list-group">
-                        <li class="list-group-item top-ten-list" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span>{{$index+1}}</span> {{users.name}}</li>
-                    </ul>
-
-
-                    <table class="table table-striped panel panel-default top-ten-table">
-                        <tbody>
-                            <tr ng-repeat="users in tempUsers | orderBy: 'credits':true">
-                                <td class="top-ten-item"><span>{{$index+1}}</span> {{users.name}}
-                                </td>
-                            </tr>
-                        </tbody>
-
-
-
-
-
-                    </table>
-
-
-
-                </div>
-            </div>
+        <div class="col-sm-6 col-md-3">         
+            <div class="caption">
+                <h2>Top 10 <i class="icon-group"></i></h2>
+                <ul class="list-group top-ten-table">
+                    <li class="list-group-item top-ten-item" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span>{{$index+1}}</span> {{users.name}}</li>
+                </ul>
+            </div>            
         </div>        
     </div>
 </div>
