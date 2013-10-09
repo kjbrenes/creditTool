@@ -12,19 +12,17 @@
                 Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
                 <option style="display:none" value="">-- select a category --</option>
                 </select><br>
-                    <input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory">
+                <p><input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory">
                     mandatory
                 &nbsp;
                <input type="radio" name="optionsRadios" ng-model="workshopType" value="optional">
-                    optional
-               <br>
+                    optional</p>
                 Value of Credits:<input type="text" class="form-control" ng-model="work.credits" value="" required><br>
-                <input type="radio" name="type" ng-model="workshopForm" value="online" >
+                <p><input type="radio" name="type" ng-model="workshopForm" value="online" >
                    online
                 &nbsp;
                 <input type="radio" name="type" ng-model="workshopForm" value="presential">
-                    presential
-                <br>
+                    presential</p>                
                 *Url of Workshop:<input type="url" class="form-control" ng-model="work.url" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
                 Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description" required></textarea><br>
                 <div class="input-group">
@@ -36,7 +34,7 @@
                	</select>
                 <br>
                 <button type="submit" class="btn btn-primary btn-sm">Add</button>
-                <button type="reset" class="button">Reset</button>
+                <button type="reset" class="btn btn-primary btn-sm">Reset</button>
             </form>
             </div>
         </div>
