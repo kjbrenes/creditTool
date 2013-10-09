@@ -16,12 +16,12 @@
     <br/>
     <form>
          <ul class="list-group">
-            <li class="list-group-item" id="{{myworkshop.user}}" ng-repeat="myworkshop in tempChangeCredits | filter:searchMyWorkshop ">
-                <button type="submit" class="btn btn-default" value="" ng-click="changeCredits('{{myworkshop.user}}')">Change Credits</button>
+            <li class="list-group-item" id="{{myworkshop.user}}" ng-repeat="myworkshop in tempChangeCredits | filter:searchMyWorkshop ">  
                 <p><strong>Username:</strong> {{myworkshop.name}}</p>
-                <strong>Credits:</strong> {{myworkshop.userCredits}}&nbsp;<strong>equivalent to:</strong> {{myworkshop.points}} <strong>points</strong>
+                <p><strong>Credits:</strong> {{myworkshop.userCredits}}&nbsp;<strong>equivalent to:</strong> {{myworkshop.points}} <strong>points</strong></p>
+                <button type="submit" class="btn btn-default" value="" ng-click="changeCredits('{{myworkshop.user}}')">Change Credits</button>
+                <br>
                 <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-
             </li>
         </ul>
     </form>
