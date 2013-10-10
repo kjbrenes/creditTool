@@ -197,7 +197,7 @@ height: 28px;
 background: url("../img/top-ten-icon.png") no-repeat scroll right top rgba(0, 0, 0, 0);
 color: #FFFFFF;    
 font-weight: 800;    
-line-height: 1.9;
+line-height: 2;
 text-align: center;   
 }
 
@@ -225,6 +225,13 @@ color: #999;
 .user {
 	color: #999;
 }
+
+#toast-container > .toast-success {
+	position: fixed;
+	top: 50%;
+	left: 40%;
+}
+
 
 /*-------------------------
 End Panel

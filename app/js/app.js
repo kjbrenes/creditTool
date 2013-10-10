@@ -193,7 +193,8 @@ creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCo
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 			$scope.saveWorkshop.add({id: workshopId, status: 'registered'});
-			alert("The workshop has been sent");
+			
+			toastr.success("The workshop has been sent");
 			$("#wsend"+itemID).addClass("hidde");
 		}
 	}
@@ -283,7 +284,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 					var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopname);
 					selectedWorkshop.update({status: 'approbed'});
 					users.update({credits: totalCredits});
-					alert("The workshop has been approved");
+					toastr.success("The workshop has been approved");					
 					$("#wsu"+itemID).addClass("hidde");
 				}
 
@@ -332,7 +333,7 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 
 		$scope.addMessage = function() {
 			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: Math.floor(Math.random()*101), name: $scope.user.name});
-			alert("The workshop has been added");
+			toastr.success("The workshop has been added");
 			//window.location = "#/page/addworkshops";
 	    }
 	} else {
@@ -367,8 +368,9 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 				var firebaseUser = snapshot.name();
 				if ((selectedUser == firebaseUser)) {
 					users.update({credits: 0});
-					alert("The points has been changes");
+					toastr.success("The points has been changed");
 					$("#"+selectedUser).addClass("hidde");
+					
 				}
 
 			});
@@ -380,3 +382,5 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 	}
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
+
+
