@@ -30,7 +30,7 @@ creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'ang
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootScope, $cookieStore) {
-	$scope.typeUser = 1;
+	//$scope.typeUser = 1;
 	$scope.loginUser = function(status) {
 		if(status == 0){
 			$scope.$storage = $localStorage.$default({
@@ -64,71 +64,70 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 					$rootScope.name = $scope.$storage.x;
 					$rootScope.type = $scope.$storage.y;
 					$scope.typeUser = $rootScope.type;
-
-					$cookieStore.put($rootScope.type,$scope.$storage.y);
-					$scope.userTypeCookie = $cookieStore.get($rootScope.type);
-
 					window.location = "#/page/home";
 				}
 			});
 		}
 	}
-	$scope.typeUser = $rootScope.type;
+	//$scope.typeUser = $rootScope.type;
 
 });
 /*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
 	//$cookieStore.remove($scope.tempAllWorkshops);
-	//alert($rootScope.type);
-			if(_.isUndefined($cookieStore.get($scope.tempUsers))){
-				var workshops = $scope.fbData.child('workshops'), users = $scope.fbData.child('users'), latestWorkshops = [], tempUsers = [], currentUser = users.child($rootScope.name);
+			//if(_.isUndefined($cookieStore.get($scope.tempUsers))){
+				if((_.isUndefined($rootScope.type))){
+					window.location = "#/page/login";
+				} else {
+					var workshops = $scope.fbData.child('workshops'), users = $scope.fbData.child('users'), latestWorkshops = [], tempUsers = [], currentUser = users.child($rootScope.name);
 
-				currentUser.on('value', function(snapshot) {
-					$scope.myCredits = snapshot.val().credits;
-				});
-				
-				workshops.on('child_added', function(snapshot) {
-					var wsData = snapshot.val();
-					var workshopType = true;
-					/*if(wsData.credits == 0){
-						workshopType = false;
-					}*/
-						latestWorkshops.push({
-							id: wsData.id,
-							//type: workshopType,
-							name: wsData.name, 
-							category: wsData.category, 
-							credits: wsData.credits,
-							url: wsData.url,
-							creationdate: wsData.creationdate
-						});
-				});
-				if((!_.isUndefined($scope.name))){
-					$cookieStore.put($scope.latestWorkshops,latestWorkshops);
-					$scope.latestCookie = $cookieStore.get($scope.latestWorkshops);
-
-					$scope.latestWorkshops = latestWorkshops;
-				}
-				
-				users.on('child_added', function(snapshot) {
-					var userData = snapshot.val();
-					tempUsers.push({
-						name: userData.name + ' ' + userData.firstname + ' ' + userData.lastname,  
-						credits: userData.credits
+					currentUser.on('value', function(snapshot) {
+						$scope.myCredits = snapshot.val().credits;
 					});
-				});
+					
+					workshops.on('child_added', function(snapshot) {
+						var wsData = snapshot.val();
+						var workshopType = true;
+						/*if(wsData.credits == 0){
+							workshopType = false;
+						}*/
+							latestWorkshops.push({
+								id: wsData.id,
+								//type: workshopType,
+								name: wsData.name, 
+								category: wsData.category, 
+								credits: wsData.credits,
+								url: wsData.url,
+								creationdate: wsData.creationdate
+							});
+					});
+					if((!_.isUndefined($scope.name))){
+						/*$cookieStore.put($scope.latestWorkshops,latestWorkshops);
+						$scope.latestCookie = $cookieStore.get($scope.latestWorkshops);*/
 
-				$cookieStore.put($scope.tempUsers,tempUsers);
-				$scope.loggedIn = $cookieStore.get($scope.tempUsers);
+						$scope.latestWorkshops = latestWorkshops;
+					}
+					
+					users.on('child_added', function(snapshot) {
+						var userData = snapshot.val();
+						tempUsers.push({
+							name: userData.name + ' ' + userData.firstname + ' ' + userData.lastname,  
+							credits: userData.credits
+						});
+					});
 
-				$scope.tempUsers = tempUsers;
-		} else {
+					/*$cookieStore.put($scope.tempUsers,tempUsers);
+					$scope.loggedIn = $cookieStore.get($scope.tempUsers);*/
+
+					$scope.tempUsers = tempUsers;
+				}
+		/*} else {
 				var cookie = $cookieStore.get($scope.tempUsers);
 				$scope.tempUsers = cookie;
 				var latestCookie = $cookieStore.get($scope.latestCookie);
 				$scope.latestWorkshops = latestCookie;
-		}
+		}*/
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoadCategoriesCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
@@ -144,9 +143,9 @@ creditsTracking.controller('LoadCategoriesCtrl', ['$scope', '$rootScope', functi
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
-	/*if((_.isUndefined($rootScope.type))){
+	if((_.isUndefined($rootScope.type))){
 			window.location = "#/page/login";
-		} else {*/
+		} else {
 		//$cookieStore.remove($scope.tempAllWorkshops);
 		//console.log($cookieStore.get($scope.tempAllWorkshops));
 		//if(_.isUndefined($cookieStore.get($scope.tempAllWorkshops))){
@@ -180,7 +179,7 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 					}
 				});
 			});
-
+	}
 			/*$cookieStore.put($scope.tempAllWorkshops,tempAllWorkshops);
 			$scope.workshopsCookie = $cookieStore.get($scope.tempAllWorkshops);*/
 
