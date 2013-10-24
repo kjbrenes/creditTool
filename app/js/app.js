@@ -102,11 +102,17 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', 
 								creationdate: wsData.creationdate
 							});
 					});
-					if((!_.isUndefined($scope.name))){
+
+					if(!_.isUndefined($scope.name)){
 						/*$cookieStore.put($scope.latestWorkshops,latestWorkshops);
 						$scope.latestCookie = $cookieStore.get($scope.latestWorkshops);*/
-
-						$scope.latestWorkshops = latestWorkshops;
+						//console.log(latestWorkshops);
+						/*if(!_.isUndefined(latestWorkshops)){*/
+							$scope.latestWorkshops = latestWorkshops;
+						/*} else {*/
+							//alert("no");
+							//toastr.success("Workshops not availables");
+						//}
 					}
 					
 					users.on('child_added', function(snapshot) {
@@ -149,19 +155,17 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 		//$cookieStore.remove($scope.tempAllWorkshops);
 		//console.log($cookieStore.get($scope.tempAllWorkshops));
 		//if(_.isUndefined($cookieStore.get($scope.tempAllWorkshops))){
-			var workshops = $scope.fbData.child('workshops'), workshopsbyuser = $scope.fbData.child('users'), currentUser = workshopsbyuser.child( $rootScope.name + '/workshops/'), tempAllWorkshops = [];
+			var workshops = $scope.fbData.child('workshops'), workshopsbyuser = $scope.fbData.child('users'), currentUser = workshopsbyuser.child( $rootScope.name + '/workshops'), tempAllWorkshops = [];
 			var mainUser = $rootScope.name;
 			var itemID = 0;
-			currentUser.on('child_added', function(snapshot) {
+			/*currentUser.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
-				var eachWorkshop = currentUser.child(snapshot.name());
+				console.log(myWsData);*/
 				//itemID++;
 				workshops.on('child_added', function(snapshot) {
 					var wsData = snapshot.val();
-					//console.log(wsData);
-			  		var mainWorkshopId = snapshot.name();
-					if ((myWsData.id != wsData.id)  ) {
-						//if((itemID == 1)){
+			  		//var mainWorkshopId = snapshot.name();
+					//if ((myWsData.id != wsData.id) ) {
 							tempAllWorkshops.push({
 								name: wsData.name, 
 								type: wsData.type,
@@ -172,18 +176,18 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 								form: wsData.form,
 								globalUser: mainUser,
 								workshopId: wsData.id,
-								mainWorkshopId: mainWorkshopId,
+								//mainWorkshopId: mainWorkshopId,
 								itemID: itemID
 							});
-						//}
-					}
+					//}
 				});
-			});
+			//});
+			$scope.tempAllWorkshops = tempAllWorkshops;
 	}
 			/*$cookieStore.put($scope.tempAllWorkshops,tempAllWorkshops);
 			$scope.workshopsCookie = $cookieStore.get($scope.tempAllWorkshops);*/
 
-			$scope.tempAllWorkshops = tempAllWorkshops;
+			//$scope.tempAllWorkshops = tempAllWorkshops;
 		/*} else {
 			var workshopsCookie = $cookieStore.get($scope.tempAllWorkshops);
 			$scope.tempAllWorkshops = workshopsCookie;
@@ -193,10 +197,11 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
-	$scope.sendtocheck = function(userId, workshopId, itemID, mainWorkshopId) {
+	$scope.sendtocheck = function(userId, workshopId, itemID) {
+		var saveWorkshop = $scope.saveWorkshop;
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
-			$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
-			$scope.saveWorkshop.add({id: workshopId, status: 'registered'});
+			saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
+			saveWorkshop.add({id: workshopId, status: 'registered'});
 			
 			toastr.success("The workshop has been sent");
 			$("#wsend"+itemID).addClass("hidde");
@@ -212,6 +217,7 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 			var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( $rootScope.name + '/workshops'), tempMyWorkshops = [];
 			currentUser.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
+				console.log(myWsData);
 				workshops.on('child_added', function(snapshot) {
 					var wsData = snapshot.val();
 					/*var workshopType = true;
@@ -335,10 +341,14 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 			}
 		};*/
 
-		$scope.addMessage = function() {
-			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: Math.floor(Math.random()*101), name: $scope.user.name});
+		$scope.addWorkshop = function() {
+			//console.log(moment().format());
+			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name});
 			toastr.success("The workshop has been added");
-			//window.location = "#/page/addworkshops";
+			$('#credits').val('');
+			$('#name').val('');
+			$('#url').val('');
+			$('#description').val('');
 	    }
 	} else {
 		window.location = "#/page/login";

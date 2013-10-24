@@ -7,8 +7,8 @@
     <!-- List group -->
         <div class="panel panel-info">
             <div class="panel-body">
-            <form ng-submit="addMessage()" name="myForm">
-                *Name:<input type="text" class="form-control" ng-model="user.name" value="" required><br>
+            <form ng-submit="addWorkshop()" name="myForm">
+                *Name:<input type="text" class="form-control" ng-model="user.name" id="name" value="" required><br>
                 Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
                 <option style="display:none" value="">-- select a category --</option>
                 </select><br>
@@ -17,14 +17,14 @@
                 &nbsp;
                <input type="radio" name="optionsRadios" ng-model="workshopType" value="optional">
                     optional</p>
-                Value of Credits:<input type="text" class="form-control" ng-model="work.credits" value="" required><br>
+                Value of Credits:<input type="text" class="form-control" ng-model="work.credits" id="credits" value="" required><br>
                 <p><input type="radio" name="type" ng-model="workshopForm" value="online" >
                    online
                 &nbsp;
                 <input type="radio" name="type" ng-model="workshopForm" value="presential">
                     presential</p>                
-                *Url of Workshop:<input type="url" class="form-control" ng-model="work.url" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
-                Description:<textarea class="form-control" rows="8" cols="25" ng-model="work.description" required></textarea><br>
+                *Url of Workshop:<input type="url" class="form-control" ng-model="work.url" id="url" value="" placeholder="Please insert a link beginning with 'http://'" required><br>
+                Description:<textarea class="form-control" rows="8" cols="25" id="description" ng-model="work.description" required></textarea><br>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-search"></i></span>
                     <input type="text" ng-model="searchUser" placeholder="Search Author" class="form-control">
