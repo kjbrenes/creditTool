@@ -9,8 +9,8 @@
             <div class="panel-body">
             <form ng-submit="addWorkshop()" name="myForm">
                 *Name:<input type="text" class="form-control" ng-model="user.name" id="name" value="" required><br>
-                Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops">
-                <option style="display:none" value="">-- select a category --</option>
+                Category:<select class="form-control" ng-model="myOption" ng-options="w.category for w in tempWorkshops" required>
+                <option value="">-- select a category --</option>
                 </select><br>
                 <p><input type="radio" name="optionsRadios" ng-model="workshopType" value="mandatory">
                     mandatory
@@ -29,8 +29,8 @@
                     <span class="input-group-addon"><i class="icon-search"></i></span>
                     <input type="text" ng-model="searchUser" placeholder="Search Author" class="form-control">
                 </div>
-                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption" ng-options="a.name for a in tempUsers | filter:searchUser">
-                    <option style="display:none" value="">-- select a author --</option>
+                <select class="form-control" ng-change="selectedAuthor()" ng-model="myAuthorOption" ng-options="a.name for a in tempUsers | filter:searchUser" required="required" required>
+                    <option value="">-- select a author --</option>
                	</select>
                 <br>
                 <button type="submit" class="btn btn-primary btn-sm">Add</button>

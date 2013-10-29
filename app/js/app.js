@@ -47,6 +47,7 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 			var myUser = $scope.user.name;
 			var myPwd = $scope.user.password;
 			var users = $scope.fbData.child('users'), tempUsers = [];
+			var error = false;
 			users.on('child_added', function(snapshot) {
 				var userData = snapshot.val();
 				var userType = userData.type;
@@ -65,9 +66,17 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 					$rootScope.type = $scope.$storage.y;
 					$scope.typeUser = $rootScope.type;
 					window.location = "#/page/home";
+				} else if(userData.password != myPwd){
+					error = true;
 				}
 			});
+
+			if (error == true){
+				toastr.error("Invalidad user/password");
+			}
+
 		}
+
 	}
 	//$scope.typeUser = $rootScope.type;
 
@@ -197,14 +206,14 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
-	$scope.sendtocheck = function(userId, workshopId, itemID) {
+	$scope.sendtocheck = function(userId, workshopId) {
 		var saveWorkshop = $scope.saveWorkshop;
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 			saveWorkshop.add({id: workshopId, status: 'registered'});
 			
 			toastr.success("The workshop has been sent");
-			$("#wsend"+itemID).addClass("hidde");
+			//$("#wsend"+itemID).addClass("hidde");
 		}
 	}
 }]);
@@ -217,7 +226,6 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 			var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( $rootScope.name + '/workshops'), tempMyWorkshops = [];
 			currentUser.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
-				console.log(myWsData);
 				workshops.on('child_added', function(snapshot) {
 					var wsData = snapshot.val();
 					/*var workshopType = true;
@@ -328,22 +336,16 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 				category: myWsData.name
 			});
 		});
-		$scope.tempWorkshops = tempWorkshops;
 
+		$scope.tempWorkshops = tempWorkshops;
 		$scope.workshopType = "mandatory";
 		$scope.workshopForm = "online";
 
-		/*$scope.selectedType = function() {
-			if($scope.workshopType == 'mandatory'){
-				$scope.credits = $scope.myOption.credits;
-			} else {
-				$scope.credits = 0;
-			}
-		};*/
-
 		$scope.addWorkshop = function() {
 			//console.log(moment().format());
-			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name});
+			//$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name});
+			var author = loadUsers.child($scope.myAuthorOption.name);
+
 			toastr.success("The workshop has been added");
 			$('#credits').val('');
 			$('#name').val('');
@@ -374,20 +376,26 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 			
 		});
 
-		$scope.changeCredits = function(user) {
+		$scope.changeCredits = function(user, credits) {
 			var selectedUser = user;
 			var users = creditsbyuser.child(selectedUser);
+			var error = false;
 			creditsbyuser.on('child_added', function(snapshot) {
 				var readWsData = snapshot.val();
 				var firebaseUser = snapshot.name();
-				if ((selectedUser == firebaseUser)) {
+				if ((selectedUser == firebaseUser) && (credits >= 25)) {
 					users.update({credits: 0});
 					toastr.success("The points has been changed");
 					$("#"+selectedUser).addClass("hidde");
-					
+				} else if (credits < 25){
+					error = true;
 				}
 
 			});
+
+			if(error == true){
+				toastr.error("The credits can not be changed");
+			}
 		}
 		
 		$scope.tempChangeCredits = tempChangeCredits;
@@ -396,5 +404,3 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 	}
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-
-
