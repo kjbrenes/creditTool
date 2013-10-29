@@ -343,8 +343,8 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 
 		$scope.addWorkshop = function() {
 			//console.log(moment().format());
-			//$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name});
-			var author = loadUsers.child($scope.myAuthorOption.name);
+			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name});
+			//var author = loadUsers.child($scope.myAuthorOption.name);
 
 			toastr.success("The workshop has been added");
 			$('#credits').val('');
