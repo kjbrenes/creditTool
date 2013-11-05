@@ -12,7 +12,7 @@
             <div class="caption">
                 <h2>Latest Workshops&nbsp;<i class="icon-book"></i></h2>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true">
+                    <li class="list-group-item" ng-repeat="latest in latestWorkshops | orderBy: 'creationdate':true | limitTo:10">
                         <p>{{latest.creationdate}} - <strong>{{latest.name}}</strong> - <span>{{latest.credits}} Credits </span><a href="{{latest.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a>  <span class="label label-danger">New</span></p>
                     </li>
                 </ul>
@@ -22,7 +22,7 @@
             <div class="caption">
                 <h2>Top 10 <i class="icon-group"></i></h2>
                 <ul class="list-group top-ten-table">
-                    <li class="list-group-item top-ten-item" ng-repeat="users in tempUsers | orderBy: 'credits':true"><span>{{$index+1}}</span> {{users.name}}</li>
+                    <li class="list-group-item top-ten-item" ng-repeat="users in tempUsers | orderBy: 'credits':true | limitTo:10"><span>{{$index+1}}</span> {{users.name}}</li>
                 </ul>
             </div>            
         </div>        

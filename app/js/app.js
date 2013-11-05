@@ -164,32 +164,35 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 		//$cookieStore.remove($scope.tempAllWorkshops);
 		//console.log($cookieStore.get($scope.tempAllWorkshops));
 		//if(_.isUndefined($cookieStore.get($scope.tempAllWorkshops))){
-			var workshops = $scope.fbData.child('workshops'), workshopsbyuser = $scope.fbData.child('users'), currentUser = workshopsbyuser.child( $rootScope.name + '/workshops'), tempAllWorkshops = [];
+			var workshops = $scope.fbData.child('workshops'), workshopsbyuser = $scope.fbData.child('users'), currentUser = workshopsbyuser.child($rootScope.name), workshopsList = currentUser.child("workshops"),tempAllWorkshops = [];
 			var mainUser = $rootScope.name;
-			var itemID = 0;
-			/*currentUser.on('child_added', function(snapshot) {
+			var myWsDataAuthor = "";
+			workshopsList.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
-				console.log(myWsData);*/
-				//itemID++;
-				workshops.on('child_added', function(snapshot) {
-					var wsData = snapshot.val();
-			  		//var mainWorkshopId = snapshot.name();
-					//if ((myWsData.id != wsData.id) ) {
-							tempAllWorkshops.push({
-								name: wsData.name, 
-								type: wsData.type,
-								category: wsData.category,
-								credits: wsData.credits,
-								url: wsData.url,
-								author: wsData.author,
-								form: wsData.form,
-								globalUser: mainUser,
-								workshopId: wsData.id,
-								//mainWorkshopId: mainWorkshopId,
-								itemID: itemID
-							});
-					//}
-				});
+				if(!_.isUndefined(myWsData.id)){
+					myWsDataAuthor = myWsData.id;
+					console.log(myWsDataAuthor);
+				}
+			});
+
+			workshops.on('child_added', function(snapshot) {
+				var wsData = snapshot.val();
+				if ((myWsDataAuthor != wsData.id) && (!_.isUndefined(myWsDataAuthor))) {
+						tempAllWorkshops.push({
+							name: wsData.name, 
+							type: wsData.type,
+							category: wsData.category,
+							credits: wsData.credits,
+							url: wsData.url,
+							author: wsData.author,
+							form: wsData.form,
+							globalUser: mainUser,
+							workshopId: wsData.id
+						});
+				}
+			});
+
+
 			//});
 			$scope.tempAllWorkshops = tempAllWorkshops;
 	}
@@ -267,7 +270,6 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 		  	var allUsers = pendingworkshops.child( snapshot.name() + '/workshops');
 		  	var mainUser = snapshot.name();
 		  	allUsers.on('child_added', function(snapshot) {
-		  		itemID++;	
 				var myWsData = snapshot.val();
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
@@ -282,8 +284,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 							category: wsDataWorkshop.category,
 							workshopCredits: wsDataWorkshop.credits,
 							user: mainUser,
-							workshopnode: workshopname,
-							itemID: itemID
+							workshopnode: workshopname
 						});
 					}
 				});
@@ -291,7 +292,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 			
 		});
 
-		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits, itemID) {
+		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits) {
 			var users = pendingworkshops.child(user);
 			var workShoptoApprobe = pendingworkshops.child( user + '/workshops');
 			workShoptoApprobe.on('child_added', function(snapshot) {
@@ -302,8 +303,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 					var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopname);
 					selectedWorkshop.update({status: 'approbed'});
 					users.update({credits: totalCredits});
-					toastr.success("The workshop has been approved");					
-					$("#wsu"+itemID).addClass("hidde");
+					toastr.success("The workshop has been approved");
 				}
 
 			});
@@ -323,8 +323,10 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		var loadUsers = $scope.fbData.child('users'), loadWorkshops = $scope.fbData.child('categories'), tempUsers = [], tempWorkshops = [];
 		loadUsers.on('child_added', function(snapshot) {
 			var wsData = snapshot.val();
+			var mainUser = snapshot.name();
 				tempUsers.push({
-					name: wsData.name + " " + wsData.firstname + " " + wsData.lastname
+					name: wsData.name + " " + wsData.firstname + " " + wsData.lastname,
+					author: mainUser
 				});
 		});
 		$scope.tempUsers = tempUsers;
@@ -342,9 +344,19 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		$scope.workshopForm = "online";
 
 		$scope.addWorkshop = function() {
-			//console.log(moment().format());
-			$scope.saveWorkshop.add({author: $scope.myAuthorOption.name, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name});
-			//var author = loadUsers.child($scope.myAuthorOption.name);
+			var selectedAuthor = $scope.myAuthorOption;
+			var users = loadUsers.child(selectedAuthor);
+			loadUsers.on('child_added', function(snapshot) {
+				var authorObject = snapshot.val();
+				var mainAuthorObject = snapshot.name();
+				if(selectedAuthor == mainAuthorObject){
+					var authorName = authorObject.name + " " + authorObject.firstname + " " + authorObject.lastname;
+					if($scope.saveWorkshop.add({author: authorName, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name})){
+						var addCredits = parseInt(authorObject.credits) + parseInt($scope.work.credits);
+						users.update({credits: addCredits});
+					}
+				}
+			});
 
 			toastr.success("The workshop has been added");
 			$('#credits').val('');
