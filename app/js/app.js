@@ -1,7 +1,5 @@
 'use strict';
-// Declare app level module which depends on filters, and services
-/*jslint sloppy: true */
-/*global angular, Firebase*/
+
 var creditsTracking = angular.module('creditsTracking', ['firebase', 'ngStorage', 'ngCookies']);
 
 creditsTracking.value('fbReference', 'https://credits-tracking.firebaseio.com/');
@@ -28,9 +26,7 @@ creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'ang
 	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootScope, $cookieStore) {
-	//$scope.typeUser = 1;
 	$scope.loginUser = function(status) {
 		if(status == 0){
 			$scope.$storage = $localStorage.$default({
@@ -81,7 +77,6 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 	//$scope.typeUser = $rootScope.type;
 
 });
-/*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
 	//$cookieStore.remove($scope.tempAllWorkshops);
@@ -157,16 +152,14 @@ creditsTracking.controller('LoadCategoriesCtrl', ['$scope', '$rootScope', functi
 	$scope.tempCategories = tempCategories;
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
+creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	if((_.isUndefined($rootScope.type))){
 			window.location = "#/page/login";
 		} else {
-		//$cookieStore.remove($scope.tempAllWorkshops);
-		//console.log($cookieStore.get($scope.tempAllWorkshops));
-		//if(_.isUndefined($cookieStore.get($scope.tempAllWorkshops))){
 			var workshops = $scope.fbData.child('workshops'), workshopsbyuser = $scope.fbData.child('users'), currentUser = workshopsbyuser.child($rootScope.name), workshopsList = currentUser.child("workshops"),tempAllWorkshops = [];
 			var mainUser = $rootScope.name;
 			var myWsDataAuthor = "";
+
 			workshopsList.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
 				if(!_.isUndefined(myWsData.id)){
@@ -191,20 +184,8 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', '$cookieSto
 						});
 				}
 			});
-
-
-			//});
 			$scope.tempAllWorkshops = tempAllWorkshops;
 	}
-			/*$cookieStore.put($scope.tempAllWorkshops,tempAllWorkshops);
-			$scope.workshopsCookie = $cookieStore.get($scope.tempAllWorkshops);*/
-
-			//$scope.tempAllWorkshops = tempAllWorkshops;
-		/*} else {
-			var workshopsCookie = $cookieStore.get($scope.tempAllWorkshops);
-			$scope.tempAllWorkshops = workshopsCookie;
-		}*/
-	//}
 
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -214,9 +195,7 @@ creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCo
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 			saveWorkshop.add({id: workshopId, status: 'registered'});
-			
 			toastr.success("The workshop has been sent");
-			//$("#wsend"+itemID).addClass("hidde");
 		}
 	}
 }]);
@@ -225,21 +204,14 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 	if((_.isUndefined($rootScope.type))){
 			window.location = "#/page/login";
 		} else {
-		//if(_.isUndefined($cookieStore.get($scope.tempUsers))){
 			var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( $rootScope.name + '/workshops'), tempMyWorkshops = [];
 			currentUser.on('child_added', function(snapshot) {
 				var myWsData = snapshot.val();
 				workshops.on('child_added', function(snapshot) {
 					var wsData = snapshot.val();
-					/*var workshopType = true;
-					if(wsData.credits == 0){
-						workshopType = false;
-					}*/
-
 					if ((myWsData.id == wsData.id) && (!_.isUndefined(wsData.id))  ) {
 						tempMyWorkshops.push({
 							id: myWsData.id,
-							//type: workshopType,
 							status: myWsData.status,
 							name: wsData.name,
 							category: wsData.category, 
@@ -249,17 +221,9 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 					}
 				});
 			});
-			/*$cookieStore.put($scope.tempMyWorkshops,tempMyWorkshops);
-			$scope.myWorkshopsCookie = $cookieStore.get($scope.tempMyWorkshops);*/
-
 			$scope.tempMyWorkshops = tempMyWorkshops;
-		/*} else {
-			var cookieTempMyWorkshops = $cookieStore.get($scope.tempUsers);
-			$scope.tempMyWorkshops = cookieTempMyWorkshops;
-		}*/
 	}
 }]);
-/*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
@@ -317,7 +281,6 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
 		var loadUsers = $scope.fbData.child('users'), loadWorkshops = $scope.fbData.child('categories'), tempUsers = [], tempWorkshops = [];
@@ -369,7 +332,6 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 	}
 }]);
 
-/*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', '$rootScope', function ($scope, creditsEquivalent, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
