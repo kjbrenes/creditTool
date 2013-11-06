@@ -35,8 +35,8 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 			});
 			delete $scope.$storage.x;
 			delete $scope.$storage.y;
-			$cookieStore.remove($scope.tempUsers);
-			$cookieStore.remove($scope.latestWorkshops);
+			//$cookieStore.remove($scope.tempUsers);
+			//$cookieStore.remove($scope.latestWorkshops);
 			//$cookieStore.remove($scope.tempAllWorkshops);
 	    	window.location = "#/partials/login";
 		} else {
