@@ -350,7 +350,40 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 			
 		});
 
+		$scope.ids = {};
+
 		$scope.changeCredits = function(user, credits) {
+			var getUsers = $scope.ids;
+			console.log(getUsers);
+			var error = false;
+			var log = [];
+			angular.forEach(getUsers, function(value, key){
+				  if(value == true){
+			  		this.push(key + ': ' + value);
+				  	var users = creditsbyuser.child(key);
+
+				  	creditsbyuser.on('child_added', function(snapshot) {
+				  		var readWsData = snapshot.val();
+						var readUserData = snapshot.name();
+				  		//console.log(readUserData + "-" + getUsers[value]);
+				  		/*if(getUsers[value] == readUserData && value == true){
+				  			alert("si");
+				  		}*/
+				  		if(readWsData.credits >= 25){
+					  		users.update({credits: 0});
+					  		$("#"+key).addClass("hidde");
+							toastr.success("The points for selected users has been changed");
+				  		} else if (readWsData.credits < 25){
+							error = true;
+						}
+				  	});
+				  }
+			}, log);
+
+			if(error == true){
+				toastr.error("The credits can not be changed");
+			}
+/*
 			var selectedUser = user;
 			var users = creditsbyuser.child(selectedUser);
 			var error = false;
@@ -369,7 +402,7 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 
 			if(error == true){
 				toastr.error("The credits can not be changed");
-			}
+			}*/
 		}
 		
 		$scope.tempChangeCredits = tempChangeCredits;
