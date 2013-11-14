@@ -153,6 +153,7 @@ creditsTracking.controller('LoadCategoriesCtrl', ['$scope', '$rootScope', functi
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+
 	if((_.isUndefined($rootScope.type))){
 			window.location = "#/page/login";
 		} else {
@@ -184,12 +185,29 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 						});
 				}
 			});
+
+			$scope.currentPage = 0;
+		    $scope.pageSize = 5;
+		    $scope.data = [];
+		    
+		    for (var i=0; i<15; i++) {
+		        $scope.data.push("Item "+i);
+		    }
+
 			$scope.tempAllWorkshops = tempAllWorkshops;
 	}
 
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start;
+        return input.slice(parseInt(start));
+    }
+});
+/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
+
 	$scope.sendtocheck = function(userId, workshopId) {
 		var saveWorkshop = $scope.saveWorkshop;
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
@@ -244,6 +262,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 							status: myWsData.status,
 							name: wsData.username,
 							userCredits: wsData.credits,
+							historyCredits: wsData.creditsHistory,
 							wName: wsDataWorkshop.name,
 							category: wsDataWorkshop.category,
 							workshopCredits: wsDataWorkshop.credits,
@@ -256,17 +275,21 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 			
 		});
 
-		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits) {
+		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits, historyCredits) {
 			var users = pendingworkshops.child(user);
 			var workShoptoApprobe = pendingworkshops.child( user + '/workshops');
 			workShoptoApprobe.on('child_added', function(snapshot) {
 				var readWsData = snapshot.val();
 				var totalCredits = parseInt(userCredits) + parseInt(workshopCredits);
+				var myHistoryCredits = parseInt(workshopCredits) + parseInt(historyCredits);
+				console.log(workshopCredits +"--"+ historyCredits);
+				
 				if ((readWsData.id == workshopId)) {
 					var workshopname = snapshot.name();
 					var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopname);
 					selectedWorkshop.update({status: 'approbed'});
 					users.update({credits: totalCredits});
+					users.update({creditsHistory: myHistoryCredits});
 					toastr.success("The workshop has been approved");
 				}
 
@@ -333,7 +356,7 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 }]);
 
 /*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', '$rootScope', function ($scope, creditsEquivalent, $rootScope) {
+creditsTracking.controller('LoadUsersCreditsCtrl', ['$scope', 'creditsEquivalent', '$rootScope', function ($scope, creditsEquivalent, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
 		var creditsbyuser = $scope.fbData.child('users'), tempChangeCredits = [];
 
@@ -341,73 +364,99 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', 'creditsEquivalent', 
 			var wsData = snapshot.val();
 			var mainUser = snapshot.name();
 			var creditstopoints = Math.round((parseInt(wsData.credits)) / creditsEquivalent);
-			tempChangeCredits.push({
-				name: wsData.username,
-				userCredits: wsData.credits,
-				user: mainUser,
-				points: creditstopoints
-			});
+			if(wsData.credits >= 25){
+				tempChangeCredits.push({
+					name: wsData.username,
+					userCredits: wsData.credits,
+					user: mainUser,
+					points: creditstopoints
+				});
+			}
 			
 		});
 
 		$scope.ids = {};
 
-		$scope.changeCredits = function(user, credits) {
+		$scope.tempChangeCredits = tempChangeCredits;
+	} else {
+		window.location = "#/page/login";
+	}
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($scope, $http) {
+		var creditsbyuser = $scope.fbData.child('users'), tempChangeCredits = [];
+		$scope.changeCredits = function(user, approveType) {
+		if(approveType == 'all'){
 			var getUsers = $scope.ids;
-			console.log(getUsers);
-			var error = false;
 			var log = [];
 			angular.forEach(getUsers, function(value, key){
 				  if(value == true){
 			  		this.push(key + ': ' + value);
 				  	var users = creditsbyuser.child(key);
-
 				  	creditsbyuser.on('child_added', function(snapshot) {
 				  		var readWsData = snapshot.val();
 						var readUserData = snapshot.name();
-				  		//console.log(readUserData + "-" + getUsers[value]);
-				  		/*if(getUsers[value] == readUserData && value == true){
-				  			alert("si");
-				  		}*/
-				  		if(readWsData.credits >= 25){
-					  		users.update({credits: 0});
-					  		$("#"+key).addClass("hidde");
-							toastr.success("The points for selected users has been changed");
-				  		} else if (readWsData.credits < 25){
-							error = true;
-						}
+				  		if(key == readUserData && value == true){
+					  		if(readWsData.credits >= 50){
+							  	$http({
+								    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+								    url: 'js/send.php',
+								    method: "POST",
+								    data: $.param({
+								      "username" : readWsData.username,
+								      "credits" : readWsData.credits
+								    }),
+								  })
+								  .success(function(data) {
+								    $scope.entries = data;
+								});
+
+						  		users.update({credits: 0});
+						  		$("#"+key).addClass("hidde");
+								toastr.success("The points for selected users has been changed");
+
+								value = false;
+					  		} else if (readWsData.credits < 50 && readWsData.credits != 0){
+								toastr.error("The credits for "+ readWsData.username +" can not be changed");
+								value = false;
+							}
+				  		}
 				  	});
 				  }
 			}, log);
-
-			if(error == true){
-				toastr.error("The credits can not be changed");
-			}
-/*
+		} else {
 			var selectedUser = user;
 			var users = creditsbyuser.child(selectedUser);
-			var error = false;
 			creditsbyuser.on('child_added', function(snapshot) {
 				var readWsData = snapshot.val();
 				var firebaseUser = snapshot.name();
-				if ((selectedUser == firebaseUser) && (credits >= 25)) {
-					users.update({credits: 0});
-					toastr.success("The points has been changed");
-					$("#"+selectedUser).addClass("hidde");
-				} else if (credits < 25){
-					error = true;
+				if (selectedUser == firebaseUser) {
+					if(readWsData.credits >= 50){
+
+						$http({
+						    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+						    url: 'js/send.php',
+						    method: "POST",
+						    data: $.param({
+						      "username" : readWsData.username,
+						      "credits" : readWsData.credits
+						    }),
+						  })
+						  .success(function(data) {
+						    $scope.entries = data;
+						});
+
+						users.update({credits: 0});
+						toastr.success("The points has been changed");
+						$("#"+selectedUser).addClass("hidde");
+					} else if (readWsData.credits < 50){
+						toastr.error("The credits for "+ readWsData.username +" can not be changed");
+					}
 				}
 
 			});
 
-			if(error == true){
-				toastr.error("The credits can not be changed");
-			}*/
 		}
-		
-		$scope.tempChangeCredits = tempChangeCredits;
-	} else {
-		window.location = "#/page/login";
 	}
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
