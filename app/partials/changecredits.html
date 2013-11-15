@@ -4,10 +4,16 @@
     <div class="panel-heading page-header">
         <h1>Change Credits<small> on Yahoo! University</small></h1>    
     </div>
-    <ul class="pager">
-        <li class="previous disabled"><a href="#">&larr; Previous</a></li>
-        <li class="next"><a href="#">Next &rarr;</a></li>
-    </ul>
+    <div class="pager">
+        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
+            Previous
+        </button>
+        {{currentPage+1}}/{{pageTotal}}
+        <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
+            Next
+        </button>
+    </div>
+    <br>
     <!-- List group -->
     <div class="input-group">
         <span class="input-group-addon"><i class="icon-search"></i></span>
@@ -16,7 +22,7 @@
     <br/>
     <form>
          <ul class="list-group" ng-controller="ChangeCreditsCtrl">
-            <li class="list-group-item" id="{{myworkshop.user}}" ng-repeat="myworkshop in tempChangeCredits | filter:searchMyWorkshop"> 
+            <li class="list-group-item" id="{{myworkshop.user}}" ng-repeat="myworkshop in tempChangeCredits | filter:searchMyWorkshop| startFrom:currentPage*pageSize | limitTo:pageSize"> 
                 <p><input type="checkbox" ng-model="ids[myworkshop.user]">&nbsp;<strong>Username:</strong> {{myworkshop.name}}</p>
                 <p><strong>Credits:</strong> {{myworkshop.userCredits}}&nbsp;<strong>equivalent to:</strong> {{myworkshop.points}} <strong>points</strong></p>
                 <button type="submit" class="btn btn-default" value="" ng-click="changeCredits('{{myworkshop.user}}', 'selected')">Change Credits</button>
@@ -25,6 +31,15 @@
             </li>
         </ul>
         <button type="submit" class="btn btn-default" value="" ng-click="changeCredits('{{ids}}', 'all')" ng-controller="ChangeCreditsCtrl">Change Selected Credits</button>
-    </form>    
+    </form>
+    <div class="pager">
+        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
+            Previous
+        </button>
+        {{currentPage+1}}/{{pageTotal}}
+        <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
+            Next
+        </button>
+    </div>
 </div>
 

@@ -21,14 +21,14 @@
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
             Previous
         </button>
-        {{currentPage+1}}/{{data.length/pageSize}}
+        {{currentPage+1}}/{{pageTotal}}
         <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
             Next
         </button>
     </div>
     <br>
     <ul class="list-group" ng-controller="WorkshopsSendtoCheckCtrl">
-        <li class="list-group-item" ng-hide="hide" ng-repeat="workshop in tempAllWorkshops | startFrom:currentPage*pageSize | limitTo:pageSize" ng-switch="{{workshop.type}}">
+        <li class="list-group-item" ng-hide="hide" ng-repeat="workshop in tempAllWorkshops | filter:searchMyWorkshop | startFrom:currentPage*pageSize | limitTo:pageSize" ng-switch="{{workshop.type}}">
             <h2><strong>{{workshop.name}}</strong> <a href="{{workshop.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a></h2>
             <p>Category: <span class="category-icon">{{workshop.category}}</span></p>
             <p ng-switch-when="true">Credits: {{workshop.credits}}</p>
@@ -42,7 +42,7 @@
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
             Previous
         </button>
-        {{currentPage+1}}/{{data.length/pageSize}}
+        {{currentPage+1}}/{{pageTotal}}
         <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
             Next
         </button>

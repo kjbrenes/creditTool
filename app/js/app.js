@@ -152,6 +152,13 @@ creditsTracking.controller('LoadCategoriesCtrl', ['$scope', '$rootScope', functi
 	$scope.tempCategories = tempCategories;
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start;
+        return input.slice(start);
+    }
+});
+/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	if((_.isUndefined($rootScope.type))){
@@ -165,7 +172,6 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 				var myWsData = snapshot.val();
 				if(!_.isUndefined(myWsData.id)){
 					myWsDataAuthor = myWsData.id;
-					console.log(myWsDataAuthor);
 				}
 			});
 
@@ -190,21 +196,15 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 		    $scope.pageSize = 5;
 		    $scope.data = [];
 		    
-		    for (var i=0; i<15; i++) {
+		    for (var i=0; i<tempAllWorkshops.length; i++) {
 		        $scope.data.push("Item "+i);
 		    }
-
+		    
+		    $scope.pageTotal = Math.ceil($scope.data.length / $scope.pageSize);
 			$scope.tempAllWorkshops = tempAllWorkshops;
 	}
 
 }]);
-/*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.filter('startFrom', function() {
-    return function(input, start) {
-        start = +start;
-        return input.slice(parseInt(start));
-    }
-});
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
 
@@ -239,6 +239,15 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 					}
 				});
 			});
+
+			$scope.currentPage = 0;
+		    $scope.pageSize = 5;
+		    $scope.data = [];
+		    
+		    for (var i=0; i<tempMyWorkshops.length; i++) {
+		        $scope.data.push("Item "+i);
+		    }
+		    $scope.pageTotal = Math.ceil($scope.data.length / $scope.pageSize);
 			$scope.tempMyWorkshops = tempMyWorkshops;
 	}
 }]);
@@ -296,6 +305,15 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 			});
 		}
 		
+		$scope.currentPage = 0;
+	    $scope.pageSize = 5;
+	    $scope.data = [];
+	    
+	    for (var i=0; i<tempPendingWorkshops.length; i++) {
+	        $scope.data.push("Item "+i);
+	    }
+	    $scope.pageTotal = Math.ceil($scope.data.length / $scope.pageSize);
+
 		$scope.tempPendingWorkshops = tempPendingWorkshops;
 
 	} else {
@@ -376,6 +394,15 @@ creditsTracking.controller('LoadUsersCreditsCtrl', ['$scope', 'creditsEquivalent
 		});
 
 		$scope.ids = {};
+
+		$scope.currentPage = 0;
+	    $scope.pageSize = 5;
+	    $scope.data = [];
+	    
+	    for (var i=0; i<tempChangeCredits.length; i++) {
+	        $scope.data.push("Item "+i);
+	    }
+	    $scope.pageTotal = Math.ceil($scope.data.length / $scope.pageSize);
 
 		$scope.tempChangeCredits = tempChangeCredits;
 	} else {

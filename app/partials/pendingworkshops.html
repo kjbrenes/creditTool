@@ -4,19 +4,24 @@
     <div class="panel-heading page-header">
         <h1>Pending Workshops<small> on Yahoo! University</small></h1>    
     </div>
-    <ul class="pager">
-        <li class="previous disabled"><a href="#">&larr; Previous</a></li>
-        <li class="next"><a href="#">Next &rarr;</a></li>
-    </ul>
     <!-- List group -->
     <div class="input-group">
         <span class="input-group-addon"><i class="icon-search"></i></span>
         <input type="text" class="form-control" placeholder="Search Criteria..." ng-model="searchMyWorkshop">
     </div>
-    <br/>
+    <div class="pager">
+        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
+            Previous
+        </button>
+        {{currentPage+1}}/{{pageTotal}}
+        <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
+            Next
+        </button>
+    </div>
+    <br>
     <form>
          <ul class="list-group">
-            <li class="list-group-item" ng-hide="hide" ng-repeat="myworkshop in tempPendingWorkshops  | filter:searchMyWorkshop">                 
+            <li class="list-group-item" ng-hide="hide" ng-repeat="myworkshop in tempPendingWorkshops  | filter:searchMyWorkshop| startFrom:currentPage*pageSize | limitTo:pageSize">                 
                 <p>Username: <span class="user">{{myworkshop.name}} {{myworkshop.firstname}}</span></p>
                 <p><strong>{{myworkshop.wName}}</strong><span class="label label-danger">{{myworkshop.status}}</span></p>
                 <p>Category: <span class="category-icon">{{myworkshop.category}}</span></p>
@@ -24,4 +29,14 @@
             </li>
         </ul>
     </form>
+    <div class="pager">
+        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
+            Previous
+        </button>
+        {{currentPage+1}}/{{pageTotal}}
+        <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
+            Next
+        </button>
+    </div>
+    <br>
 </div>
