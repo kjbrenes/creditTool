@@ -177,7 +177,7 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 
 			workshops.on('child_added', function(snapshot) {
 				var wsData = snapshot.val();
-				if ((myWsDataAuthor != wsData.id) && (!_.isUndefined(myWsDataAuthor))) {
+				if ((myWsDataAuthor != wsData.id)) {
 						tempAllWorkshops.push({
 							name: wsData.name, 
 							type: wsData.type,

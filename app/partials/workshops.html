@@ -4,31 +4,17 @@
     <div class="panel-heading page-header">
         <h1>Workshops<small> on Yahoo! University</small></h1>    
     </div>
-    <!--<ul class="pager">
-        <li class="previous disabled"><a href="#">&larr; Previous</a></li>
-        <li class="next"><a href="#">Next &rarr;</a></li>
-    </ul>-->
-
     <br/>
-    <p>Filter by: <input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="presential" ng-false-value="" /> Presential
+    <p>Filter by: <input type="checkbox" data-ng-model="searchMyWorkshop.form" ng-true-value="presential" ng-false-value="" /> Presential
     &nbsp;
-    <input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="online" ng-false-value="" /> Online</p>
-    <p>Category:</p><select class="form-control" ng-controller="LoadCategoriesCtrl" data-ng-model="searchWorkshop.category">
+    <input type="checkbox" data-ng-model="searchMyWorkshop.form" ng-true-value="online" ng-false-value="" /> Online</p>
+    <p>Category:</p><select class="form-control" ng-controller="LoadCategoriesCtrl" data-ng-model="searchMyWorkshop.category">
     <option value="">-- All Categories --</option>
     <option ng-repeat="value in tempCategories" value="{{value.category}}">{{value.category}}</option>
-    </select><br>
-    <div class="pager">
-        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
-            Previous
-        </button>
-        {{currentPage+1}}/{{pageTotal}}
-        <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
-            Next
-        </button>
-    </div>
+    </select>
     <br>
     <ul class="list-group" ng-controller="WorkshopsSendtoCheckCtrl">
-        <li class="list-group-item" ng-hide="hide" ng-repeat="workshop in tempAllWorkshops | filter:searchMyWorkshop | startFrom:currentPage*pageSize | limitTo:pageSize" ng-switch="{{workshop.type}}">
+        <li class="list-group-item" ng-hide="hide" ng-repeat="workshop in tempAllWorkshops | filter:searchMyWorkshop" ng-switch="{{workshop.type}}">
             <h2><strong>{{workshop.name}}</strong> <a href="{{workshop.url}}" target="_blank"><i class="icon-cloud-download" title="download worshop"></i></a></h2>
             <p>Category: <span class="category-icon">{{workshop.category}}</span></p>
             <p ng-switch-when="true">Credits: {{workshop.credits}}</p>
@@ -37,14 +23,4 @@
             <button type="button" class="btn btn-default" ng-click="sendtocheck('{{workshop.globalUser}}', '{{workshop.workshopId}}'); hide = !hide">Register</button>
         </li>
     </ul>
-    <br>
-    <div class="pager">
-        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
-            Previous
-        </button>
-        {{currentPage+1}}/{{pageTotal}}
-        <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
-            Next
-        </button>
-    </div>
 </div>
