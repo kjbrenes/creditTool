@@ -6,11 +6,11 @@
     </div>
     <div class="pager">
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
-            Previous
+            &lt;&lt;
         </button>
         {{currentPage+1}}/{{pageTotal}}
         <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
-            Next
+            &gt;&gt;
         </button>
     </div>
     <br>
@@ -34,11 +34,11 @@
     </form>
     <div class="pager">
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
-            Previous
+            &lt;&lt;
         </button>
         {{currentPage+1}}/{{pageTotal}}
         <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
-            Next
+            &gt;&gt;
         </button>
     </div>
 </div>
