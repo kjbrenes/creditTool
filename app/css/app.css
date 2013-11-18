@@ -226,15 +226,39 @@ color: #999;
 	color: #999;
 }
 
-#toast-container > .toast-success {
+#toast-container {
 	position: fixed;
 	top: 50%;
 	left: 40%;
 }
 
-
 /*-------------------------
 End Panel
+-------------------------*/
+
+/*-------------------------
+Pagination
+-------------------------*/
+.pager {
+	color: #0087AD;
+}
+
+.pager .disabled {
+	color: #009CC7;
+}
+
+.pager button {
+	background: #0087AD;
+	border: none;
+	color: #fff;
+	-webkit-border-radius: 3px;    
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+
+/*-------------------------
+End Pagination
 -------------------------*/
 
 /*-------------------------
