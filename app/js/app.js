@@ -415,6 +415,9 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($s
 		$scope.changeCredits = function(user, approveType) {
 		if(approveType == 'all'){
 			var getUsers = $scope.ids;
+			if(angular.equals({},getUsers)){
+				toastr.error("Please select at least one user");
+			}
 			var log = [];
 			angular.forEach(getUsers, function(value, key){
 				  if(value == true){

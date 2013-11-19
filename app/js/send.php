@@ -1,5 +1,5 @@
 <?php
-	$to = "granados@yahoo-inc.com";
+	$to = "gracans777@yahoo.es";
 	$subject = "Changed Credits";
 	$message = '<html><body>';
 	$message.= "<p>Hi Admin, you should add <b>".$_POST['credits']."</b> credits to <b>".$_POST['username']."</b></p>";
