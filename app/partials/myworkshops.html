@@ -12,11 +12,11 @@
     <br/>
     <div class="pager">
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
-            Previous
+            &lt;&lt;
         </button>
         {{currentPage+1}}/{{pageTotal}}
         <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
-            Next
+            &gt;&gt;
         </button>
     </div>
     <br>
@@ -31,13 +31,13 @@
         </li>
     </ul>
     <br>
-    <div class="pager">
+     <div class="pager">
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
-            Previous
+            &lt;&lt;
         </button>
         {{currentPage+1}}/{{pageTotal}}
         <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1" class="next">
-            Next
+            &gt;&gt;
         </button>
     </div>
 </div>
