@@ -12,8 +12,8 @@
     <br/>
     <p>Filter by: <input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="presential" ng-false-value="" /> Presential
     &nbsp;
-    <input type="checkbox" data-ng-model="searchWorkshop.form" ng-true-value="online" ng-false-value="" /> Online</p>
-    <p>Category:</p><select class="form-control" ng-controller="LoadCategoriesCtrl" data-ng-model="searchWorkshop.category">
+    <input type="checkbox" data-ng-model="searchMyWorkshop.form" ng-true-value="online" ng-false-value="" /> Online</p>
+    <p>Category:</p><select class="form-control" ng-controller="LoadCategoriesCtrl" data-ng-model="searchMyWorkshop.category">
     <option value="">-- All Categories --</option>
     <option ng-repeat="value in tempCategories" value="{{value.category}}">{{value.category}}</option>
     </select><br>
