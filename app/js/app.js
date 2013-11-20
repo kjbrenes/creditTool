@@ -15,6 +15,7 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
         .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
         .when('/page/pendingworkshops', {templateUrl: 'partials/pendingworkshops.html'})
         .when('/page/changecredits', {templateUrl: 'partials/changecredits.html'})
+        .when('/page/changemycredits', {templateUrl: 'partials/changemycredits.html'})
         .when('/page/home', {templateUrl: 'partials/home.html'})
         .when('/page/login', {templateUrl: 'partials/login.html'})
         .otherwise({templateUrl: 'partials/login.html'});
@@ -372,7 +373,67 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 		window.location = "#/page/login";
 	}
 }]);
+/*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.controller('LoadMyCreditsCtrl', ['$scope', 'creditsEquivalent', '$rootScope', function ($scope, creditsEquivalent, $rootScope) {
+	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 2){
+		var mycredits = $scope.fbData.child('users'), tempChangeMyCredits = [];
 
+			mycredits.on('child_added', function(snapshot) {
+				var wsData = snapshot.val();
+				var mainUser = snapshot.name();
+				var creditstopoints = Math.round((parseInt(wsData.credits)) / creditsEquivalent);
+				if (($rootScope.name == mainUser) && (!_.isUndefined(mainUser))  ) {
+						tempChangeMyCredits.push({
+							name: wsData.username,
+							userCredits: wsData.credits,
+							user: mainUser,
+							points: creditstopoints
+						});
+				}
+				
+			});
+
+		$scope.tempChangeMyCredits = tempChangeMyCredits;
+	} else {
+		window.location = "#/page/login";
+	}
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.controller('ChangeMyCreditsCtrl', ['$scope', '$http', 'creditsEquivalent', '$rootScope', function ($scope, $http, creditsEquivalent, $rootScope) {
+		var creditsUser = $scope.fbData.child('users'), tempChangeCredits = [];
+		$scope.changeMyCredits = function(user) {
+			var selectedUser = user;
+			var users = creditsUser.child(selectedUser);
+			creditsUser.on('child_added', function(snapshot) {
+				var readWsData = snapshot.val();
+				var firebaseUser = snapshot.name();
+				var creditstopoints = Math.round((parseInt(readWsData.credits)) / creditsEquivalent);
+				if ((firebaseUser == user) && (!_.isUndefined(user))  ) {
+					if(creditstopoints >= 50){
+						$http({
+						    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+						    url: 'js/send.php',
+						    method: "POST",
+						    data: $.param({
+						      "username" : readWsData.username,
+						      "credits" : creditstopoints,
+						      "email": readWsData.email,
+						      "request": "exchange"
+						    }),
+						})
+						  .success(function(data) {
+						    $scope.entries = data;
+						    toastr.success("Your request has been sent to Administrator");
+						});
+					} else if (creditstopoints < 50){
+								toastr.error("Your credits can not be changed");
+								value = false;
+							}
+				}
+			});
+	}
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoadUsersCreditsCtrl', ['$scope', 'creditsEquivalent', '$rootScope', function ($scope, creditsEquivalent, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
@@ -410,7 +471,7 @@ creditsTracking.controller('LoadUsersCreditsCtrl', ['$scope', 'creditsEquivalent
 	}
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($scope, $http) {
+creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEquivalent', function ($scope, $http, creditsEquivalent) {
 		var creditsbyuser = $scope.fbData.child('users'), tempChangeCredits = [];
 		$scope.changeCredits = function(user, approveType) {
 		if(approveType == 'all'){
@@ -426,6 +487,7 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($s
 				  	creditsbyuser.on('child_added', function(snapshot) {
 				  		var readWsData = snapshot.val();
 						var readUserData = snapshot.name();
+						var creditstopoints = Math.round((parseInt(readWsData.credits)) / creditsEquivalent);
 				  		if(key == readUserData && value == true){
 					  		if(readWsData.credits >= 50){
 							  	$http({
@@ -434,7 +496,8 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($s
 								    method: "POST",
 								    data: $.param({
 								      "username" : readWsData.username,
-								      "credits" : readWsData.credits
+								      "credits" : creditstopoints,
+								      "email": readWsData.email
 								    }),
 								  })
 								  .success(function(data) {
@@ -460,6 +523,7 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($s
 			creditsbyuser.on('child_added', function(snapshot) {
 				var readWsData = snapshot.val();
 				var firebaseUser = snapshot.name();
+				var creditstopoints = Math.round((parseInt(readWsData.credits)) / creditsEquivalent);
 				if (selectedUser == firebaseUser) {
 					if(readWsData.credits >= 50){
 
@@ -469,7 +533,8 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', function ($s
 						    method: "POST",
 						    data: $.param({
 						      "username" : readWsData.username,
-						      "credits" : readWsData.credits
+						      "credits" : creditstopoints,
+							  "email": readWsData.email
 						    }),
 						  })
 						  .success(function(data) {
