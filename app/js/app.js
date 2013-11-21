@@ -65,7 +65,9 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 					window.location = "#/page/home";
 				} else if(userData.password != myPwd){
 					error = true;
-				}
+				}/* else if(userData.username != myUser){
+					error = true;
+				}*/
 			});
 
 			if (error == true){
@@ -292,7 +294,6 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 				var readWsData = snapshot.val();
 				var totalCredits = parseInt(userCredits) + parseInt(workshopCredits);
 				var myHistoryCredits = parseInt(workshopCredits) + parseInt(historyCredits);
-				console.log(workshopCredits +"--"+ historyCredits);
 				
 				if ((readWsData.id == workshopId)) {
 					var workshopname = snapshot.name();
@@ -386,6 +387,7 @@ creditsTracking.controller('LoadMyCreditsCtrl', ['$scope', 'creditsEquivalent', 
 						tempChangeMyCredits.push({
 							name: wsData.username,
 							userCredits: wsData.credits,
+							creditsHistory: wsData.creditsHistory,
 							user: mainUser,
 							points: creditstopoints
 						});
@@ -428,7 +430,7 @@ creditsTracking.controller('ChangeMyCreditsCtrl', ['$scope', '$http', 'creditsEq
 					} else if (creditstopoints < 50){
 								toastr.error("Your credits can not be changed");
 								value = false;
-							}
+					}
 				}
 			});
 	}
@@ -487,9 +489,10 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEqui
 				  	creditsbyuser.on('child_added', function(snapshot) {
 				  		var readWsData = snapshot.val();
 						var readUserData = snapshot.name();
+						var creditsHistory = readWsData.creditsHistory;
 						var creditstopoints = Math.round((parseInt(readWsData.credits)) / creditsEquivalent);
 				  		if(key == readUserData && value == true){
-					  		if(readWsData.credits >= 50){
+					  		if(creditstopoints >= 50){
 							  	$http({
 								    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 								    url: 'js/send.php',
@@ -504,12 +507,13 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEqui
 								    $scope.entries = data;
 								});
 
+								users.update({creditsHistory: parseInt(creditsHistory) + parseInt(readWsData.credits)});
 						  		users.update({credits: 0});
 						  		$("#"+key).addClass("hidde");
 								toastr.success("The points for selected users has been changed");
 
 								value = false;
-					  		} else if (readWsData.credits < 50 && readWsData.credits != 0){
+					  		} else if (creditstopoints < 50 && creditstopoints != 0){
 								toastr.error("The credits for "+ readWsData.username +" can not be changed");
 								value = false;
 							}
@@ -524,8 +528,9 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEqui
 				var readWsData = snapshot.val();
 				var firebaseUser = snapshot.name();
 				var creditstopoints = Math.round((parseInt(readWsData.credits)) / creditsEquivalent);
+				var creditsHistory = readWsData.creditsHistory;
 				if (selectedUser == firebaseUser) {
-					if(readWsData.credits >= 50){
+					if(creditstopoints >= 50){
 
 						$http({
 						    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -540,11 +545,11 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEqui
 						  .success(function(data) {
 						    $scope.entries = data;
 						});
-
+						users.update({creditsHistory: parseInt(creditsHistory) + parseInt(readWsData.credits)});
 						users.update({credits: 0});
 						toastr.success("The points has been changed");
 						$("#"+selectedUser).addClass("hidde");
-					} else if (readWsData.credits < 50){
+					} else if (creditstopoints < 50){
 						toastr.error("The credits for "+ readWsData.username +" can not be changed");
 					}
 				}

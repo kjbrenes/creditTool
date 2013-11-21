@@ -1,5 +1,6 @@
 <?php
 
+
 	if(!isset($_POST['request'])){
 		$to = "granados@yahoo-inc.com";
 		$subject = "Exchange Credits";
