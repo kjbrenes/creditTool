@@ -215,7 +215,7 @@ creditsTracking.controller('WorkshopsSendtoRegisterCtrl', ['$scope', 'angularFir
 		var saveWorkshop = $scope.saveWorkshop;
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
-			saveWorkshop.add({id: workshopId, status: 'registered'});
+			saveWorkshop.add({id: workshopId, status: 'registered', registered: moment().format('L')});
 			toastr.success("The workshop has been registered");
 		}
 	}
@@ -268,8 +268,6 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
 	var pendingworkshops = $scope.fbData.child('users');
 	$scope.sendtoreview = function(userId, workshopId) {
-		//alert(userId+"-"+workshopId);
-		//var users = pendingworkshops.child(userId);
 		var workShoptoApprobe = pendingworkshops.child( userId + '/workshops');
 		var saveWorkshop = $scope.saveWorkshop;
 		workShoptoApprobe.on('child_added', function(snapshot) {
@@ -279,7 +277,7 @@ creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireC
 					saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 					var workshopname = snapshot.name();
 					var selectedWorkshop = pendingworkshops.child( userId + '/workshops/' + workshopname);
-					selectedWorkshop.update({status: 'pending to review'});
+					selectedWorkshop.update({status: 'pending to review', sentReview: moment().format('L')});
 					toastr.success("The workshop has been sent to review");
 				}
 			}
@@ -300,8 +298,15 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
 					var workshopname = snapshot.name();
+
+					var myStatus = workshopname.status;
+					var pendingReview = 0;
+
 					if ((myWsData.id == wsDataWorkshop.id) && (!_.isUndefined(myWsData.id))) {
 						if((myWsData.status == "pending to review") || (myWsData.status == "registered")){
+							if(myWsData.status == "pending to review"){
+								pendingReview = 1;
+							}
 							tempPendingWorkshops.push({
 								id: wsDataWorkshop.id,
 								status: myWsData.status,
@@ -312,7 +317,8 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 								category: wsDataWorkshop.category,
 								workshopCredits: wsDataWorkshop.credits,
 								user: mainUser,
-								workshopnode: workshopname
+								workshopnode: workshopname,
+								pendingReview: pendingReview
 							});
 						}
 					}
