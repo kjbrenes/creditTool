@@ -265,7 +265,7 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 	}
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
+creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireCollection', '$http', function ($scope, angularFireCollection, $http) {
 	var pendingworkshops = $scope.fbData.child('users');
 	$scope.sendtoreview = function(userId, workshopId) {
 		var workShoptoApprobe = pendingworkshops.child( userId + '/workshops');
@@ -278,7 +278,22 @@ creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireC
 					var workshopname = snapshot.name();
 					var selectedWorkshop = pendingworkshops.child( userId + '/workshops/' + workshopname);
 					selectedWorkshop.update({status: 'pending to review', sentReview: moment().format('L')});
-					toastr.success("The workshop has been sent to review");
+
+					$http({
+						    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+						    url: 'js/send.php',
+						    method: "POST",
+						    data: $.param({
+						      "username" : readWsData.username,
+						      "email": readWsData.email,
+						      "request": "review"
+						    }),
+						})
+						  .success(function(data) {
+						    $scope.entries = data;
+						    toastr.success("The workshop has been sent to review");
+						});
+
 				}
 			}
 		});
@@ -318,7 +333,8 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 								workshopCredits: wsDataWorkshop.credits,
 								user: mainUser,
 								workshopnode: workshopname,
-								pendingReview: pendingReview
+								pendingReview: pendingReview,
+								registered: myWsData.registered
 							});
 						}
 					}
