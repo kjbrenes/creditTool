@@ -209,14 +209,14 @@ creditsTracking.controller('WorkshopsCtrl', ['$scope', '$rootScope', function ($
 
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
-creditsTracking.controller('WorkshopsSendtoCheckCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
+creditsTracking.controller('WorkshopsSendtoRegisterCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
 
-	$scope.sendtocheck = function(userId, workshopId) {
+	$scope.sendtoregister = function(userId, workshopId) {
 		var saveWorkshop = $scope.saveWorkshop;
 		if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 			saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 			saveWorkshop.add({id: workshopId, status: 'registered'});
-			toastr.success("The workshop has been sent");
+			toastr.success("The workshop has been registered");
 		}
 	}
 }]);
@@ -227,17 +227,27 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 		} else {
 			var workshops = $scope.fbData.child('workshops'), myworkshops = $scope.fbData.child('users'), currentUser = myworkshops.child( $rootScope.name + '/workshops'), tempMyWorkshops = [];
 			currentUser.on('child_added', function(snapshot) {
+				var mainUser = $rootScope.name;
 				var myWsData = snapshot.val();
 				workshops.on('child_added', function(snapshot) {
 					var wsData = snapshot.val();
+					var myStatus = myWsData.status;
+					var registered = 0;
+					if(myStatus == "registered"){
+						registered = 1;
+					}
+					
 					if ((myWsData.id == wsData.id) && (!_.isUndefined(wsData.id))  ) {
 						tempMyWorkshops.push({
 							id: myWsData.id,
-							status: myWsData.status,
+							status: myStatus,
 							name: wsData.name,
 							category: wsData.category, 
-							credits: wsData.credits, 
-							author: wsData.author
+							credits: wsData.credits,
+							globalUser: mainUser,
+							workshopId: wsData.id,
+							author: wsData.author,
+							registered: registered
 						});
 					}
 				});
@@ -255,6 +265,28 @@ creditsTracking.controller('MyWorkshopsCtrl', ['$scope', '$rootScope', '$cookieS
 	}
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireCollection', function ($scope, angularFireCollection) {
+	var pendingworkshops = $scope.fbData.child('users');
+	$scope.sendtoreview = function(userId, workshopId) {
+		//alert(userId+"-"+workshopId);
+		//var users = pendingworkshops.child(userId);
+		var workShoptoApprobe = pendingworkshops.child( userId + '/workshops');
+		var saveWorkshop = $scope.saveWorkshop;
+		workShoptoApprobe.on('child_added', function(snapshot) {
+			var readWsData = snapshot.val();
+			if(readWsData.id == workshopId){
+				if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
+					saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
+					var workshopname = snapshot.name();
+					var selectedWorkshop = pendingworkshops.child( userId + '/workshops/' + workshopname);
+					selectedWorkshop.update({status: 'pending to review'});
+					toastr.success("The workshop has been sent to review");
+				}
+			}
+		});
+	}
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
 		var pendingworkshops = $scope.fbData.child('users'), workshops = $scope.fbData.child('workshops'), tempPendingWorkshops = [];
@@ -268,19 +300,21 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 				workshops.on('child_added', function(snapshot) {
 					var wsDataWorkshop = snapshot.val();
 					var workshopname = snapshot.name();
-					if ((myWsData.id == wsDataWorkshop.id) && (myWsData.status == "registered") && (!_.isUndefined(myWsData.id))) {
-						tempPendingWorkshops.push({
-							id: wsDataWorkshop.id,
-							status: myWsData.status,
-							name: wsData.username,
-							userCredits: wsData.credits,
-							historyCredits: wsData.creditsHistory,
-							wName: wsDataWorkshop.name,
-							category: wsDataWorkshop.category,
-							workshopCredits: wsDataWorkshop.credits,
-							user: mainUser,
-							workshopnode: workshopname
-						});
+					if ((myWsData.id == wsDataWorkshop.id) && (!_.isUndefined(myWsData.id))) {
+						if((myWsData.status == "pending to review") || (myWsData.status == "registered")){
+							tempPendingWorkshops.push({
+								id: wsDataWorkshop.id,
+								status: myWsData.status,
+								name: wsData.username,
+								userCredits: wsData.credits,
+								historyCredits: wsData.creditsHistory,
+								wName: wsDataWorkshop.name,
+								category: wsDataWorkshop.category,
+								workshopCredits: wsDataWorkshop.credits,
+								user: mainUser,
+								workshopnode: workshopname
+							});
+						}
 					}
 				});
 			});
