@@ -20,14 +20,14 @@
         </button>
     </div>
     <br>
-    <ul class="list-group">
-        <li class="list-group-item" ng-repeat="myworkshop in tempMyWorkshops | filter:searchMyWorkshop | startFrom:currentPage*pageSize | limitTo:pageSize">
+    <ul class="list-group" ng-controller="WorkshopsSendtoReviewCtrl">
+        <li class="list-group-item" ng-repeat="myworkshop in tempMyWorkshops | filter:searchMyWorkshop | startFrom:currentPage*pageSize | limitTo:pageSize" ng-switch="{{myworkshop.registered}}">
             <input type="hidden" value"{{myworkshop.id}}"/>
-            <p><strong>{{myworkshop.name}}</strong> <span class="label label-danger">{{myworkshop.status}}</span></p> 
+            <p><strong>{{myworkshop.name}}</strong> <span class="label label-danger {{myworkshop.status}}">{{myworkshop.status}}</span></p> 
             <p>Category: <span class="category-icon">{{myworkshop.category}}</span></p> 
             <p>Credits: {{myworkshop.credits}}</p>
             <p class="autor">By: {{myworkshop.author}}</p>
-            
+            <button type="button" class="btn btn-default" ng-switch-when="1" ng-click="sendtoreview('{{myworkshop.globalUser}}', '{{myworkshop.workshopId}}'); hide = !hide">Send to Review</button><br>
         </li>
     </ul>
     <br>
