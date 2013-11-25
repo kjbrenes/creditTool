@@ -316,7 +316,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 
 					var myStatus = workshopname.status;
 					var pendingReview = 0;
-
+					console.log(myWsData);
 					if ((myWsData.id == wsDataWorkshop.id) && (!_.isUndefined(myWsData.id))) {
 						if((myWsData.status == "pending to review") || (myWsData.status == "registered")){
 							if(myWsData.status == "pending to review"){
@@ -334,7 +334,8 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 								user: mainUser,
 								workshopnode: workshopname,
 								pendingReview: pendingReview,
-								registered: myWsData.registered
+								registered: myWsData.registered,
+								sentReview: myWsData.sentReview
 							});
 						}
 					}
