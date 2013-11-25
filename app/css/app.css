@@ -17,6 +17,10 @@ End Global
 /*-------------------------
 Heading
 -------------------------*/
+¨.navbar-collapse {
+	margin-top: 20px;
+}
+
 .panel-heading.page-header,
 .input-group-addon,
 .btn-primary,
