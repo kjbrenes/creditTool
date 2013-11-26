@@ -175,7 +175,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', end
 margin-left: 5px;
 padding: 5px;
 background: #94be01;
-text-transform: capitalize;
+text-transform: uppercase;
 }
 
 .label.pending {
