@@ -3,10 +3,8 @@
 var creditsTracking = angular.module('creditsTracking', ['firebase', 'ngStorage', 'ngCookies']);
 
 creditsTracking.value('fbReference', 'https://credits-tracking.firebaseio.com/');
-/*---------------------------------------------------------------------------------------------------------------------*/
-
 creditsTracking.value('creditsEquivalent', 3);
-
+/*----------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/page/workshops', {templateUrl: 'partials/workshops.html'})
@@ -20,6 +18,7 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
         .when('/page/login', {templateUrl: 'partials/login.html'})
         .otherwise({templateUrl: 'partials/login.html'});
 }]);
+/*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'angularFireCollection', '$rootScope', function ($scope, fbReference, angularFireCollection, $rootScope) {
 	$scope.fbData = new Firebase(fbReference);
 	window.fbData = $scope.fbData;
@@ -29,13 +28,15 @@ creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'ang
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootScope, $cookieStore) {
 	$scope.loginUser = function(status) {
-		if(status == 0){
-			$scope.$storage = $localStorage.$default({
+		$scope.$storage = $localStorage.$default({
 		          x: '',
 		          y: ''
-			});
-			delete $scope.$storage.x;
-			delete $scope.$storage.y;
+		});
+		delete $scope.$storage.x;
+		delete $scope.$storage.y;
+		$rootScope.type = null;
+
+		if(status == 0){
 			//$cookieStore.remove($scope.tempUsers);
 			//$cookieStore.remove($scope.latestWorkshops);
 			//$cookieStore.remove($scope.tempAllWorkshops);
@@ -88,7 +89,7 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
 	//$cookieStore.remove($scope.tempAllWorkshops);
 			//if(_.isUndefined($cookieStore.get($scope.tempUsers))){
-				if((_.isUndefined($rootScope.type))){
+				if(_.isUndefined($rootScope.type) || $rootScope.type == null){
 					window.location = "#/page/login";
 				} else {
 					var workshops = $scope.fbData.child('workshops'), users = $scope.fbData.child('users'), latestWorkshops = [], tempUsers = [], currentUser = users.child($rootScope.name);
@@ -298,11 +299,10 @@ creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireC
 						})
 						  .success(function(data) {
 						    $scope.entries = data;
-						    toastr.success("The workshop has been sent to review");
-
 						    angular.forEach($scope.tempMyWorkshops, function(value, key){
 						    	if($scope.tempMyWorkshops[key].workshopId == workshopId){
 									$scope.tempMyWorkshops[key].status = "pending to review";
+						    		toastr.success("The workshop has been sent to review");
 						    	}
 						    });
 						});
@@ -504,7 +504,6 @@ creditsTracking.controller('ChangeMyCreditsCtrl', ['$scope', '$http', 'creditsEq
 			});
 	}
 }]);
-/*---------------------------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoadUsersCreditsCtrl', ['$scope', 'creditsEquivalent', '$rootScope', function ($scope, creditsEquivalent, $rootScope) {
 	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
