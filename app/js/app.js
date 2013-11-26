@@ -44,35 +44,39 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 			var myUser = $scope.user.name;
 			var myPwd = $scope.user.password;
 			var users = $scope.fbData.child('users'), tempUsers = [];
-			var error = false;
 			users.on('child_added', function(snapshot) {
 				var userData = snapshot.val();
 				var userType = userData.type;
-				if(userData.username == myUser && userData.password == myPwd){
-					tempUsers.push({
-						type: userData.type
-					});
+				if(userData.username == myUser){
+					if(userData.password == myPwd){
+						tempUsers.push({
+							type: userData.type
+						});
 
-					var userLogged = snapshot.name();
-					$scope.$storage = $localStorage.$default({
-				          x: userLogged,
-				          y: userType
-					});
+						var userLogged = snapshot.name();
+						$scope.$storage = $localStorage.$default({
+					          x: userLogged,
+					          y: userType
+						});
 
-					$rootScope.name = $scope.$storage.x;
-					$rootScope.type = $scope.$storage.y;
-					$scope.typeUser = $rootScope.type;
-					window.location = "#/page/home";
-				} else if(userData.password != myPwd){
-					error = true;
-				}/* else if(userData.username != myUser){
-					error = true;
-				}*/
+						$rootScope.name = $scope.$storage.x;
+						$rootScope.type = $scope.$storage.y;
+						$scope.typeUser = $rootScope.type;
+						window.location = "#/page/home";
+
+						var userLogged = snapshot.name();
+						$scope.$storage = $localStorage.$default({
+					          x: userLogged,
+					          y: userType
+						});
+
+						$rootScope.name = $scope.$storage.x;
+						$rootScope.type = $scope.$storage.y;
+						$scope.typeUser = $rootScope.type;
+						window.location = "#/page/home";
+					} else {toastr.error("Invalidad user/password");}
+				}
 			});
-
-			if (error == true){
-				toastr.error("Invalidad user/password");
-			}
 
 		}
 
@@ -270,9 +274,12 @@ creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireC
 	$scope.sendtoreview = function(userId, workshopId) {
 		var workShoptoApprobe = pendingworkshops.child( userId + '/workshops');
 		var saveWorkshop = $scope.saveWorkshop;
+		var isCorrect = false;
 		workShoptoApprobe.on('child_added', function(snapshot) {
 			var readWsData = snapshot.val();
-			if(readWsData.id == workshopId){
+			//console.log(readWsData.id +"=="+ workshopId);
+			if(readWsData.id == workshopId && isCorrect == false){
+				isCorrect = true;
 				if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
 					saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/users/' + userId + '/workshops/'));
 					var workshopname = snapshot.name();
@@ -292,8 +299,13 @@ creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireC
 						  .success(function(data) {
 						    $scope.entries = data;
 						    toastr.success("The workshop has been sent to review");
-						});
 
+						    angular.forEach($scope.tempMyWorkshops, function(value, key){
+						    	if($scope.tempMyWorkshops[key].workshopId == workshopId){
+									$scope.tempMyWorkshops[key].status = "pending to review";
+						    	}
+						    });
+						});
 				}
 			}
 		});
@@ -316,7 +328,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 
 					var myStatus = workshopname.status;
 					var pendingReview = 0;
-					console.log(myWsData);
+					//console.log(myWsData);
 					if ((myWsData.id == wsDataWorkshop.id) && (!_.isUndefined(myWsData.id))) {
 						if((myWsData.status == "pending to review") || (myWsData.status == "registered")){
 							if(myWsData.status == "pending to review"){
