@@ -264,7 +264,8 @@ Pagination
 }
 
 .pager button[disabled] {
-	color: #009CC7;
+	color: #8FD1E0;
+	background: #CAF1F9;
 }
 
 .pager button {
