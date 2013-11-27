@@ -494,6 +494,7 @@ creditsTracking.controller('ChangeMyCreditsCtrl', ['$scope', '$http', 'creditsEq
 						})
 						  .success(function(data) {
 						    $scope.entries = data;
+						    users.update({changeCreditsNow: true});
 						    toastr.success("Your request has been sent to Administrator");
 						});
 					} else if (creditstopoints < 50){
@@ -518,7 +519,8 @@ creditsTracking.controller('LoadUsersCreditsCtrl', ['$scope', 'creditsEquivalent
 					name: wsData.username,
 					userCredits: wsData.credits,
 					user: mainUser,
-					points: creditstopoints
+					points: creditstopoints,
+					changeCreditsNow: wsData.changeCreditsNow
 				});
 			}
 			
@@ -577,6 +579,7 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEqui
 
 								users.update({creditsHistory: parseInt(creditsHistory) + parseInt(readWsData.credits)});
 						  		users.update({credits: 0});
+						  		users.update({changeCreditsNow: false});
 						  		$("#"+key).addClass("hidde");
 								toastr.success("The points for selected users has been changed");
 
@@ -615,6 +618,7 @@ creditsTracking.controller('ChangeCreditsCtrl', ['$scope', '$http', 'creditsEqui
 						});
 						users.update({creditsHistory: parseInt(creditsHistory) + parseInt(readWsData.credits)});
 						users.update({credits: 0});
+						users.update({changeCreditsNow: false});
 						toastr.success("The points has been changed");
 						$("#"+selectedUser).addClass("hidde");
 					} else if (creditstopoints < 50){
