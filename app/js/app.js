@@ -356,7 +356,7 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 			
 		});
 
-		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits, historyCredits) {
+		$scope.changeState = function(user, workshopId, workshopName, userCredits, workshopCredits, historyCredits, state) {
 			var users = pendingworkshops.child(user);
 			var workShoptoApprobe = pendingworkshops.child( user + '/workshops');
 			workShoptoApprobe.on('child_added', function(snapshot) {
@@ -367,10 +367,17 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 				if ((readWsData.id == workshopId)) {
 					var workshopname = snapshot.name();
 					var selectedWorkshop = pendingworkshops.child( user + '/workshops/' + workshopname);
-					selectedWorkshop.update({status: 'approbed'});
-					users.update({credits: totalCredits});
-					users.update({creditsHistory: myHistoryCredits});
-					toastr.success("The workshop has been approved");
+
+					if(state == 0){
+						selectedWorkshop.update({status: 'approbed'});
+						users.update({credits: totalCredits});
+						users.update({creditsHistory: myHistoryCredits});
+						toastr.success("The workshop has been approved");
+					} else {
+						selectedWorkshop.update({status: 'rejected'});
+						toastr.success("The workshop has been rejected");
+					}
+
 				}
 
 			});
