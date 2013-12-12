@@ -11,6 +11,8 @@ creditsTracking.config(['$routeProvider', function ($routeProvider) {
         .when('/page/myworkshops', {templateUrl: 'partials/myworkshops.html'})
         .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
         .when('/page/addworkshops', {templateUrl: 'partials/addworkshops.html'})
+        .when('/page/addusers', {templateUrl: 'partials/addusers.html'})
+        .when('/page/addcategories', {templateUrl: 'partials/addcategories.html'})
         .when('/page/pendingworkshops', {templateUrl: 'partials/pendingworkshops.html'})
         .when('/page/changecredits', {templateUrl: 'partials/changecredits.html'})
         .when('/page/changemycredits', {templateUrl: 'partials/changemycredits.html'})
@@ -23,7 +25,9 @@ creditsTracking.controller('CreditsTrackingCtrl', ['$scope', 'fbReference', 'ang
 	$scope.fbData = new Firebase(fbReference);
 	window.fbData = $scope.fbData;
 
-	$scope.saveWorkshop = angularFireCollection(new Firebase('https://credits-tracking.firebaseio.com/workshops'));
+	$scope.saveWorkshop = angularFireCollection(new Firebase(fbReference+'/workshops'));
+	$scope.saveUser = angularFireCollection(new Firebase(fbReference+'/users'));
+	$scope.saveCategory = angularFireCollection(new Firebase(fbReference+'/categories'));
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootScope, $cookieStore) {
@@ -37,9 +41,6 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 		$rootScope.type = null;
 
 		if(status == 0){
-			//$cookieStore.remove($scope.tempUsers);
-			//$cookieStore.remove($scope.latestWorkshops);
-			//$cookieStore.remove($scope.tempAllWorkshops);
 	    	window.location = "#/partials/login";
 		} else {
 			var myUser = $scope.user.name;
@@ -82,13 +83,11 @@ creditsTracking.controller('LoginCtrl', function ($scope, $localStorage, $rootSc
 		}
 
 	}
-	//$scope.typeUser = $rootScope.type;
 
 });
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
-	//$cookieStore.remove($scope.tempAllWorkshops);
-			//if(_.isUndefined($cookieStore.get($scope.tempUsers))){
+
 				if(_.isUndefined($rootScope.type) || $rootScope.type == null){
 					window.location = "#/page/login";
 				} else {
@@ -101,12 +100,9 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', 
 					workshops.on('child_added', function(snapshot) {
 						var wsData = snapshot.val();
 						var workshopType = true;
-						/*if(wsData.credits == 0){
-							workshopType = false;
-						}*/
+
 							latestWorkshops.push({
 								id: wsData.id,
-								//type: workshopType,
 								name: wsData.name, 
 								category: wsData.category, 
 								credits: wsData.credits,
@@ -116,36 +112,19 @@ creditsTracking.controller('HomeCtrl', ['$scope', '$rootScope', '$cookieStore', 
 					});
 
 					if(!_.isUndefined($scope.name)){
-						/*$cookieStore.put($scope.latestWorkshops,latestWorkshops);
-						$scope.latestCookie = $cookieStore.get($scope.latestWorkshops);*/
-						//console.log(latestWorkshops);
-						/*if(!_.isUndefined(latestWorkshops)){*/
 							$scope.latestWorkshops = latestWorkshops;
-						/*} else {*/
-							//alert("no");
-							//toastr.success("Workshops not availables");
-						//}
 					}
 					
 					users.on('child_added', function(snapshot) {
 						var userData = snapshot.val();
 						tempUsers.push({
-							name: userData.name + ' ' + userData.firstname + ' ' + userData.lastname,  
+							name: userData.name,
 							credits: userData.credits
 						});
 					});
 
-					/*$cookieStore.put($scope.tempUsers,tempUsers);
-					$scope.loggedIn = $cookieStore.get($scope.tempUsers);*/
-
 					$scope.tempUsers = tempUsers;
 				}
-		/*} else {
-				var cookie = $cookieStore.get($scope.tempUsers);
-				$scope.tempUsers = cookie;
-				var latestCookie = $cookieStore.get($scope.latestCookie);
-				$scope.latestWorkshops = latestCookie;
-		}*/
 }]);
 /*---------------------------------------------------------------------------------------------------------------------*/
 creditsTracking.controller('LoadCategoriesCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
@@ -278,7 +257,6 @@ creditsTracking.controller('WorkshopsSendtoReviewCtrl', ['$scope', 'angularFireC
 		var isCorrect = false;
 		workShoptoApprobe.on('child_added', function(snapshot) {
 			var readWsData = snapshot.val();
-			//console.log(readWsData.id +"=="+ workshopId);
 			if(readWsData.id == workshopId && isCorrect == false){
 				isCorrect = true;
 				if ((!_.isUndefined(userId)) && (!_.isUndefined(workshopId)) ) {
@@ -328,7 +306,6 @@ creditsTracking.controller('PendingWorkshopsCtrl', ['$scope', '$rootScope', func
 
 					var myStatus = workshopname.status;
 					var pendingReview = 0;
-					//console.log(myWsData);
 					if ((myWsData.id == wsDataWorkshop.id) && (!_.isUndefined(myWsData.id))) {
 						if((myWsData.status == "pending to review") || (myWsData.status == "registered")){
 							if(myWsData.status == "pending to review"){
@@ -407,7 +384,7 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 			var wsData = snapshot.val();
 			var mainUser = snapshot.name();
 				tempUsers.push({
-					name: wsData.name + " " + wsData.firstname + " " + wsData.lastname,
+					name: wsData.name,
 					author: mainUser
 				});
 		});
@@ -432,7 +409,7 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 				var authorObject = snapshot.val();
 				var mainAuthorObject = snapshot.name();
 				if(selectedAuthor == mainAuthorObject){
-					var authorName = authorObject.name + " " + authorObject.firstname + " " + authorObject.lastname;
+					var authorName = authorObject.name;
 					if($scope.saveWorkshop.add({author: authorName, category: $scope.myOption.category, creationdate: moment().format('L'), credits: $scope.work.credits, url: $scope.work.url, description: $scope.work.description, type: $scope.workshopType, form: $scope.workshopForm, id: _.uniqueId(moment().format()), name: $scope.user.name})){
 						var addCredits = parseInt(authorObject.credits) + parseInt($scope.work.credits);
 						users.update({credits: addCredits});
@@ -446,6 +423,77 @@ creditsTracking.controller('AddWorkshopsCtrl', ['$scope', '$rootScope', function
 			$('#url').val('');
 			$('#description').val('');
 	    }
+	} else {
+		window.location = "#/page/login";
+	}
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.controller('AddUsersCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
+		var loadRoles = $scope.fbData.child('usertype'), tempRoles = [];
+		loadRoles.on('child_added', function(snapshot) {
+			var mainUser = snapshot.name();
+				tempRoles.push({
+					rolUser: mainUser
+				});
+		});
+		$scope.tempRoles = tempRoles;
+
+		$scope.addUser = function() {
+
+			var rolType = $scope.myRolOption.rolUser;
+			loadRoles.on('child_added', function(snapshot) {
+				var wsData = snapshot.val();
+				var mainRol = snapshot.name();
+				if(mainRol == rolType){
+					rolType = wsData;
+				}
+			});
+
+			if($scope.saveUser.add({name: $scope.user.name, email: $scope.user.email, username: $scope.user.username, password: $scope.user.password, type: rolType, credits: 0, creditsHistory: 0, changeCreditsNow: false})){
+				toastr.success("The User has been added");
+				$('#name').val('');
+				$('#email').val('');
+				$('#username').val('');
+				$('#password').val('');
+				$('#rolType').val('');
+			} else {
+				toastr.success("error");
+			}
+
+	    }
+		
+	} else {
+		window.location = "#/page/login";
+	}
+}]);
+/*---------------------------------------------------------------------------------------------------------------------*/
+creditsTracking.controller('AddCategoryCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+	if(!(_.isUndefined($rootScope.type)) && $rootScope.type == 1){
+		var loadCategories = $scope.fbData.child('categories');
+		var mainCategoryName;
+		var exist = false;
+		$scope.addCategory = function() {
+			loadCategories.on('child_added', function(snapshot) {
+				var wsData = snapshot.val();
+				mainCategoryName = wsData.name;
+
+				if(mainCategoryName == $scope.category.name){
+					exist = true;
+				}
+			});
+
+			if(exist){
+				toastr.error("This category already exist");
+			} else {
+				if($scope.saveCategory.add({name: $scope.category.name})){
+					toastr.success("The category '"+ $scope.category.name +"'' has been added");
+					$('#name').val('');
+				}
+			}
+			exist = false;
+	    }
+		
 	} else {
 		window.location = "#/page/login";
 	}
