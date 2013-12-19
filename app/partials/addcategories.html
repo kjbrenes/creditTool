@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default" role="navigation" ng-controller="CreditsTrackingCtrl" ng-include="'partials/nav.html'"></nav>
+<div ng-controller="AddCategoryCtrl">
+    <!-- Default panel contents -->
+    <div class="panel-heading page-header">
+        <h1>Add Workshops<small> on Yahoo! University</small></h1>    
+    </div>
+    <!-- List group -->
+        <div class="panel panel-info">
+            <div class="panel-body">
+            <form ng-submit="addCategory()" name="myForm">
+                *Category Name:<input type="text" class="form-control" ng-model="category.name" id="name" value="" required><br>
+                <button type="submit" class="btn btn-primary btn-sm">Add</button>
+                <button type="reset" class="btn btn-primary btn-sm">Reset</button>
+            </form>
+            </div>
+        </div>
+</div>
