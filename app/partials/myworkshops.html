@@ -5,9 +5,18 @@
         <h1>My Workshops<small> on Yahoo! University</small></h1>    
     </div>
     <!-- List group -->
+    <br/>
+    <p>
+        Filter by: <input type="checkbox" data-ng-model="searchMyWorkshop.status" ng-true-value="registered" ng-false-value="" /> Registered
+        &nbsp;
+        <input type="checkbox" data-ng-model="searchMyWorkshop.status" ng-true-value="pending to review" ng-false-value="" /> Pending to Review
+        <input type="checkbox" data-ng-model="searchMyWorkshop.status" ng-true-value="approved" ng-false-value="" /> Approved  
+        <input type="checkbox" data-ng-model="searchMyWorkshop.status" ng-true-value="rejected" ng-false-value="" /> Rejected  
+    </p>
+
     <div class="input-group">
         <span class="input-group-addon"><i class="icon-search"></i></span>
-        <input type="text" class="form-control" placeholder="Search Criteria..." ng-model="searchMyWorkshop">
+        <input type="text" class="form-control" placeholder="Search Category..." ng-model="searchMyWorkshop.category">
     </div>
     <br/>
     <div class="pager">

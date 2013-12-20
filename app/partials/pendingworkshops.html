@@ -5,10 +5,15 @@
         <h1>Pending Workshops<small> on Yahoo! University</small></h1>    
     </div>
     <!-- List group -->
-    <div class="input-group">
-        <span class="input-group-addon"><i class="icon-search"></i></span>
-        <input type="text" class="form-control" placeholder="Search Criteria..." ng-model="searchMyWorkshop">
-    </div>
+    <br/>
+    <p>Filter by: <input type="checkbox" data-ng-model="searchMyWorkshop.status" ng-true-value="registered" ng-false-value="" /> Registered
+    &nbsp;
+    <input type="checkbox" data-ng-model="searchMyWorkshop.status" ng-true-value="pending to review" ng-false-value="" /> Pending to Review </p>
+    <p>Category:</p><select class="form-control" ng-controller="LoadCategoriesCtrl" data-ng-model="searchMyWorkshop.category">
+    <option value="">-- All Categories --</option>
+    <option ng-repeat="value in tempCategories" value="{{value.category}}">{{value.category}}</option>
+    </select>
+    <br>
     <div class="pager">
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="previous disabled">
             &lt;&lt;
